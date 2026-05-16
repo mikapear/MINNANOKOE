@@ -18,7 +18,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with('tags')
+            ->with(['tags', 'user'])
             ->when($q !== '', function ($query) use ($q) {
                 $like = '%'.addcslashes($q, '%_\\').'%';
                 $query->where(function ($qry) use ($like) {
@@ -30,11 +30,13 @@ class StoryController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        $tags = Tag::query()->orderBy('name')->limit(80)->get();
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
 
         return view('stories.index', [
             'posts' => $posts,
-            'tags' => $tags,
+            'tagGroups' => $tagGroups,
             'searchQuery' => $q,
             'pageTitle' => '物語を探す',
         ]);
@@ -99,14 +101,18 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with('tags')
+            ->with(['tags', 'user'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
 
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
+
         return view('stories.index', [
             'posts' => $posts,
-            'tags' => Tag::query()->orderBy('name')->limit(80)->get(),
+            'tagGroups' => $tagGroups,
             'searchQuery' => '',
             'pageTitle' => 'タグ: '.$tag->name,
             'activeTag' => $tag,
@@ -143,19 +149,21 @@ class StoryController extends Controller
             ->where('slug', $tagSlug)
             ->where('tag_group_id', $group->id)
             ->firstOrFail();
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
 
         $posts = Post::query()
             ->published()
-            ->with('tags')
+            ->with(['tags', 'user'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
 
-        $tags = Tag::query()->orderBy('name')->limit(80)->get();
 
         return view('stories.index', [
             'posts' => $posts,
-            'tags' => $tags,
+            'tagGroups' => $tagGroups,
             'searchQuery' => '',
             'pageTitle' => $label.' · '.$tag->name,
             'activeTag' => $tag,

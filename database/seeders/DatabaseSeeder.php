@@ -43,6 +43,21 @@ class DatabaseSeeder extends Seeder
             ['name' => '状況で選ぶ', 'sort_order' => 3],
         );
 
+        $sideEffect = TagGroup::query()->updateOrCreate(
+            ['slug' => 'side-effect'],
+            ['name' => '副作用', 'sort_order' => 4],
+        );   
+
+        $emotion = TagGroup::query()->updateOrCreate(
+        ['slug' => 'emotion'],
+        ['name' => '気持ち', 'sort_order' => 5],
+        );
+
+        $lifestyle = TagGroup::query()->updateOrCreate(
+        ['slug' => 'lifestyle'],
+        ['name' => '生活', 'sort_order' => 6],
+        );
+
         $worryTags = [
             ['slug' => 'worry-chemo', 'name' => '抗がん剤について', 'sort_order' => 1],
             ['slug' => 'worry-surgery', 'name' => '手術について', 'sort_order' => 2],
@@ -96,22 +111,61 @@ class DatabaseSeeder extends Seeder
                 ],
             );
         }
-
-        $freeTags = [
-            ['slug' => 'nausea', 'name' => '吐き気', 'sort_order' => 1],
-            ['slug' => 'fatigue', 'name' => '疲労', 'sort_order' => 2],
+        
+        $sideEffectTags = [
+        ['slug' => 'nausea', 'name' => '吐き気', 'sort_order' => 1],
+        ['slug' => 'fatigue', 'name' => '疲労', 'sort_order' => 2],
+        ['slug' => 'hair-loss', 'name' => '脱毛', 'sort_order' => 3],
         ];
-        foreach ($freeTags as $t) {
+        
+        foreach ($sideEffectTags as $t) {
+        Tag::query()->updateOrCreate(
+            ['slug' => $t['slug']],
+            [
+                'name' => $t['name'],
+                'tag_kind' => 'side_effect',
+                'tag_group_id' => $sideEffect->id,
+                'sort_order' => $t['sort_order'],
+            ],
+        );
+        }
+        
+        $emotionTags = [
+            ['slug' => 'anxiety', 'name' => '不安', 'sort_order' => 1],
+            ['slug' => 'lonely', 'name' => '孤独', 'sort_order' => 2],
+            ['slug' => 'fear-recurrence', 'name' => '再発への不安', 'sort_order' => 3],
+        ];
+        
+        foreach ($emotionTags as $t) {
             Tag::query()->updateOrCreate(
                 ['slug' => $t['slug']],
                 [
                     'name' => $t['name'],
-                    'tag_kind' => 'free',
-                    'tag_group_id' => null,
+                    'tag_kind' => 'emotion',
+                    'tag_group_id' => $emotion->id,
                     'sort_order' => $t['sort_order'],
                 ],
             );
         }
+        
+        $lifestyleTags = [
+            ['slug' => 'work-balance', 'name' => '仕事との両立', 'sort_order' => 1],
+            ['slug' => 'exercise', 'name' => '運動', 'sort_order' => 2],
+            ['slug' => 'meal', 'name' => '食事', 'sort_order' => 3],
+        ];
+        
+        foreach ($lifestyleTags as $t) {
+            Tag::query()->updateOrCreate(
+                ['slug' => $t['slug']],
+                [
+                    'name' => $t['name'],
+                    'tag_kind' => 'lifestyle',
+                    'tag_group_id' => $lifestyle->id,
+                    'sort_order' => $t['sort_order'],
+                ],
+            );
+        }
+
 
         $exercise = LearnSection::query()->updateOrCreate(
             ['slug' => 'exercise'],

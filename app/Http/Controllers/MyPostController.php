@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PostStatus;
 use App\Models\Post;
-use App\Models\Tag;
+use App\Models\TagGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,6 +15,7 @@ class MyPostController extends Controller
     {
         $posts = Post::query()
             ->where('user_id', $request->user()->id)
+            ->with(['tags', 'user'])
             ->latest()
             ->paginate(20);
 
@@ -23,34 +24,77 @@ class MyPostController extends Controller
 
     public function edit(Request $request, Post $post): View
     {
-        $this->authorize('update', $post);
+        if ($post->user_id !== $request->user()->id) {
+            abort(403);
+        }
 
-        $tags = Tag::query()->orderBy('tag_kind')->orderBy('sort_order')->get();
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
 
         return view('my-posts.edit', [
             'post' => $post,
-            'tags' => $tags,
+            'tagGroups' => $tagGroups,
         ]);
     }
 
     public function update(Request $request, Post $post): RedirectResponse
     {
-        $this->authorize('update', $post);
+        if ($post->user_id !== $request->user()->id) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'body' => ['required', 'string', 'min:10', 'max:20000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'action' => ['required', 'in:draft,submit'],
         ]);
-
+        $status = $validated['action'] === 'draft'
+            ? PostStatus::Draft
+            : PostStatus::Pending;
+        
         $post->update([
             'body_original' => $validated['body'],
-            'status' => PostStatus::Pending,
+            'body_published' => null,
+            'summary' => null,
+            'status' => $status,
+            'published_at' => null,
             'rejection_reason' => null,
+            'reviewed_by' => null,
+            'reviewed_at' => null,
         ]);
 
         $post->tags()->sync($validated['tag_ids'] ?? []);
 
         return redirect()->route('me.posts')->with('status', 'updated');
     }
+    public function destroy(Request $request, Post $post): RedirectResponse
+    {
+        if ($post->user_id !== $request->user()->id) {
+            abort(403);
+            }
+
+        $post->delete();
+
+        return redirect()
+            ->route('me.posts')
+            ->with('status', 'deleted');
+    }
+
+    public function acceptSuggestion(Post $post): RedirectResponse
+    {
+        abort_unless($post->user_id === auth()->id(), 403);
+
+        abort_unless($post->status === PostStatus::Suggested, 403);
+
+        $post->update([
+            'status' => PostStatus::Pending,
+        ]);
+
+        return redirect()
+            ->route('me.posts.edit', $post)
+            ->with('status', 'resubmitted');
+    }
+
 }

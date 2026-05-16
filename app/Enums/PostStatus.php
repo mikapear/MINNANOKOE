@@ -9,4 +9,5 @@ enum PostStatus: string
     case Rejected = 'rejected';
     case Published = 'published';
     case Hidden = 'hidden';
+    case Suggested = 'suggested';
 }

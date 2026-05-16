@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
-use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\TagGroup;
 
 class PostController extends Controller
 {
@@ -28,9 +28,11 @@ class PostController extends Controller
 
     public function edit(Post $post): View
     {
-        $tags = Tag::query()->orderBy('tag_kind')->orderBy('sort_order')->get();
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
 
-        return view('admin.posts.edit', compact('post', 'tags'));
+        return view('admin.posts.edit', compact('post', 'tagGroups'));
     }
 
     public function update(Request $request, Post $post): RedirectResponse
@@ -39,6 +41,10 @@ class PostController extends Controller
 
         if ($action === 'publish') {
             return $this->handlePublish($request, $post);
+        }
+
+        if ($action === 'suggest') {
+            return $this->suggest($request, $post);
         }
 
         $validated = $request->validate([
@@ -55,6 +61,32 @@ class PostController extends Controller
         $post->tags()->sync($validated['tag_ids'] ?? []);
 
         return redirect()->route('admin.posts.edit', $post)->with('status', 'saved');
+    }
+
+    public function suggest(Request $request, Post $post): RedirectResponse
+    {
+        $validated = $request->validate([
+            'body_published' => ['required', 'string', 'min:1', 'max:20000'],
+            'summary' => ['nullable', 'string', 'max:1000'],
+            'tag_ids' => ['nullable', 'array'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'admin_comment' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $post->update([
+            'body_published' => $validated['body_published'],
+            'summary' => $validated['summary'] ?? null,
+            'status' => PostStatus::Suggested,
+            'reviewed_by' => $request->user()->id,
+            'reviewed_at' => now(),
+            'rejection_reason' => $validated['admin_comment'] ?? null,
+        ]);
+
+        $post->tags()->sync($validated['tag_ids'] ?? []);
+
+        return redirect()
+            ->route('admin.posts.edit', $post)
+            ->with('status', 'suggested');
     }
 
     protected function handlePublish(Request $request, Post $post): RedirectResponse

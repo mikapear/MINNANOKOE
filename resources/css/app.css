@@ -5,3 +5,71 @@
 [x-cloak] {
     display: none !important;
 }
+
+
+/* ===== みんなの声辞典 投稿欄エフェクト ===== */
+
+.story-input-wrap {
+    position: relative;
+}
+
+.story-textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #e5e7eb;
+    outline: none;
+    padding: 12px 4px;
+    background: transparent;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.story-textarea:focus {
+    border-bottom-color: transparent;
+}
+
+.story-input-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 3px;
+
+    background: linear-gradient(90deg,
+            #d4af37,
+            #fff3b0,
+            #f5c542,
+            #d4af37);
+
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.9);
+
+    transition: width 0.5s ease;
+}
+
+.story-input-wrap:focus-within::after {
+    width: 100%;
+}
+
+/* キラッ演出 */
+
+.story-input-wrap::before {
+    content: "✦";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+
+    color: #f5c542;
+    font-size: 14px;
+
+    opacity: 0;
+
+    transition:
+        left 0.5s ease,
+        opacity 0.2s ease;
+}
+
+.story-input-wrap:focus-within::before {
+    left: 98%;
+    opacity: 1;
+}

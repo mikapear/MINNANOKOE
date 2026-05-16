@@ -26,16 +26,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $treatmentKeys = array_keys(config('minnanokoe.treatment_types', []));
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'birth_date' => ['required', 'date', 'before:today'],
-            'diagnosed_at' => ['required', 'date'],
-            'treatment_types' => ['required', 'array', 'min:1'],
-            'treatment_types.*' => ['string', Rule::in($treatmentKeys)],
+            'birth_year' => ['required', 'integer', 'min:1920', 'max:'.date('Y')],
+            'birth_month' => ['required', 'integer', 'min:1', 'max:12'],
+            'diagnosed_year' => ['required', 'integer', 'min:1980', 'max:'.date('Y')],
+            'diagnosed_month' => ['required', 'integer', 'min:1', 'max:12'],
+            'treatment_types.*' => ['string'],
             'privacy' => ['accepted'],
         ]);
 
@@ -43,8 +42,8 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'birth_date' => $request->birth_date,
-            'diagnosed_at' => $request->diagnosed_at,
+            'birth_date' => $request->birth_year . '-' . str_pad($request->birth_month, 2, '0', STR_PAD_LEFT) . '-01',
+            'diagnosed_at' => $request->diagnosed_year . '-' . str_pad($request->diagnosed_month, 2, '0', STR_PAD_LEFT) . '-01',
             'treatment_types' => $request->treatment_types,
             'privacy_consented_at' => now(),
         ]);

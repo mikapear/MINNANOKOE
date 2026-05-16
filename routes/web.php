@@ -9,6 +9,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\StoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\LearnColumnController;
+use App\Http\Controllers\Admin\LearnSectionController;
+use App\Http\Controllers\Admin\TagController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -52,16 +55,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/me/posts', [MyPostController::class, 'index'])->name('me.posts');
     Route::get('/me/posts/{post}/edit', [MyPostController::class, 'edit'])->name('me.posts.edit');
     Route::patch('/me/posts/{post}', [MyPostController::class, 'update'])->name('me.posts.update');
+    Route::post('/me/posts/{post}/accept-suggestion', [MyPostController::class, 'acceptSuggestion'])
+    ->name('me.posts.accept-suggestion');
+    Route::delete('/me/posts/{post}', [MyPostController::class, 'destroy'])->name('me.posts.destroy');
+
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', fn () => redirect()->route('admin.posts.index'));
 
     Route::get('/posts', [AdminPostController::class, 'index'])->name('posts.index');
+    Route::resource('learn-sections', LearnSectionController::class)
+    ->except(['show']);
+    Route::resource('learn-columns', LearnColumnController::class)
+    ->except(['show']);
+    Route::resource('tags', TagController::class)
+    ->except(['show']);
+
     Route::get('/posts/{post}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
     Route::post('/posts/{post}', [AdminPostController::class, 'update'])->name('posts.update');
+    Route::delete('/me/posts/{post}', [MyPostController::class, 'destroy'])->name('me.posts.destroy');
     Route::post('/posts/{post}/unpublish', [AdminPostController::class, 'unpublish'])->name('posts.unpublish');
     Route::post('/posts/{post}/reject', [AdminPostController::class, 'reject'])->name('posts.reject');
+    
 });
 
 require __DIR__.'/auth.php';

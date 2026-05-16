@@ -19,13 +19,36 @@
 
     <div class="mt-4">
         <p class="text-sm text-gray-600">タグで絞り込み</p>
-        <div class="mt-2 flex flex-wrap gap-2">
-            @foreach($tags as $tag)
-                <a href="{{ route('stories.tag', $tag->slug) }}"
-                    class="rounded-md border px-2 py-1 text-xs {{ isset($activeTag) && $activeTag->id === $tag->id ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200 bg-white' }}">
-                    #{{ $tag->name }}
-                </a>
+
+        <div class="mt-4 space-y-4">
+
+            @foreach($tagGroups as $group)
+
+                <div>
+
+                    <h3 class="mb-2 text-sm font-semibold text-gray-800">
+                    {{ $group->name }}
+                    </h3>
+
+                    <div class="flex flex-wrap gap-2">
+
+                        @foreach($group->tags as $tag)
+
+                            <a href="{{ route('stories.tag', $tag->slug) }}"
+                            class="rounded-md border px-2 py-1 text-xs {{ isset($activeTag) && $activeTag->id === $tag->id ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200 bg-white' }}">
+
+                                #{{ $tag->name }}
+
+                            </a>
+
+                        @endforeach
+
+                    </div>
+
+                </div>
+
             @endforeach
+
         </div>
     </div>
 
@@ -36,6 +59,49 @@
                     {{ \Illuminate\Support\Str::limit(strip_tags($post->body_published), 80) }}
                 </a>
                 <p class="mt-2 text-xs text-gray-500">{{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}</p>
+
+                @if($post->user)
+                    @php
+                        $birthDate =$post->user->birth_date
+                            ? \Carbon\Carbon::parse($post->user->birth_date)
+                            : null;
+
+                        $diagnosedAt = $post->user->diagnosed_at
+                            ? \Carbon\Carbon::parse($post->user->diagnosed_at)
+                            : null;
+
+                        $currentAge = $birthDate ? $birthDate->age : null;
+
+                        $diagnosedAge = ($birthDate && $diagnosedAt)
+                            ? $birthDate->diffInYears($diagnosedAt)
+                            : null;
+                    @endphp
+
+                    <p class="mt-1 text-xs text-gray-500">
+
+                        @if($currentAge)
+                            現在{{ floor($currentAge / 10) * 10 }}代
+                        @endif
+
+                        @if($diagnosedAge)
+                            ｜診断時{{ floor($diagnosedAge / 10) * 10 }}代
+                        @endif
+
+                        @php
+                            $treatmentLabels = config('minnanokoe.treatment_types');
+
+                            $treatments = collect((array) $post->user->treatment_types)
+                                ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
+                                ->implode('・');
+                        @endphp
+
+                        @if($post->user->treatment_types)
+                            ｜治療: {{ $treatments }}
+                        @endif
+
+                    </p>
+                @endif
+
                 @if($post->tags->isNotEmpty())
                     <div class="mt-2 flex flex-wrap gap-1">
                         @foreach($post->tags as $t)

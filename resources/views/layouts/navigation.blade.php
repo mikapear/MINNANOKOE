@@ -12,11 +12,17 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('share.create')" :active="request()->routeIs('share.*')">
+                        物語をシェア
+                    </x-nav-link>
                     <x-nav-link :href="route('stories.index')" :active="request()->routeIs('stories.*')">
                         物語を探す
                     </x-nav-link>
                     <x-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.*')">
                         学んで成長
+                    </x-nav-link>
+                    <x-nav-link :href="route('me.posts')" :active="request()->routeIs('me.posts*')">
+                        マイ投稿
                     </x-nav-link>
                     @auth
                         @if(auth()->user()->isAdmin())
@@ -45,7 +51,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            プロフィール編集
                         </x-dropdown-link>
 
                         <!-- Authentication -->

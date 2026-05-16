@@ -29,11 +29,24 @@ class ProfileController extends Controller
         $data = $request->validated();
 
         $user = $request->user();
+
+        $birthDate = $user->birth_date;
+
+        if (! empty($data['birth_year']) && ! empty($data['birth_month'])) {
+            $birthDate = $data['birth_year'].'-'.str_pad($data['birth_month'], 2, '0', STR_PAD_LEFT).'-01';
+        }
+
+        $diagnosedAt = $user->diagnosed_at;
+
+        if (! empty($data['diagnosed_year']) && ! empty($data['diagnosed_month'])) {
+            $diagnosedAt = $data['diagnosed_year'].'-'.str_pad($data['diagnosed_month'], 2, '0', STR_PAD_LEFT).'-01';
+        }
+
         $user->fill([
             'name' => $data['name'],
             'email' => $data['email'],
-            'birth_date' => $data['birth_date'] ?? $user->birth_date,
-            'diagnosed_at' => $data['diagnosed_at'] ?? $user->diagnosed_at,
+            'birth_date' => $birthDate,
+            'diagnosed_at' => $diagnosedAt,
             'treatment_types' => array_values($data['treatment_types'] ?? $user->treatment_types ?? []),
         ]);
 

@@ -14,8 +14,6 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $treatmentKeys = array_keys(config('minnanokoe.treatment_types', []));
-
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -26,10 +24,12 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'birth_date' => ['nullable', 'date', 'before:today'],
-            'diagnosed_at' => ['nullable', 'date'],
+            'birth_year' => ['nullable', 'integer', 'min:1920', 'max:'.date('Y')],
+            'birth_month' => ['nullable', 'integer', 'min:1', 'max:12'],
+            'diagnosed_year' => ['nullable', 'integer', 'min:1980', 'max:'.date('Y')],
+            'diagnosed_month' => ['nullable', 'integer', 'min:1', 'max:12'],
             'treatment_types' => ['nullable', 'array'],
-            'treatment_types.*' => ['string', Rule::in($treatmentKeys)],
+            'treatment_types.*' => ['string'],
         ];
     }
 }
