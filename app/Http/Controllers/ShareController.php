@@ -23,7 +23,7 @@ class ShareController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'body' => ['required', 'string', 'min:5', 'max:20000'],
+            'body' => ['required', 'string', 'min:5', 'max:3000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'action' => ['required', 'in:draft,submit'],

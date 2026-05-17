@@ -1,9 +1,9 @@
 @extends('layouts.site')
 
-@section('title', '学んで成長 | '.config('app.name'))
+@section('title', '学んで安心 | '.config('app.name'))
 
 @section('content')
-    <h1 class="text-2xl font-bold text-gray-900">学んで成長</h1>
+    <h1 class="text-2xl font-bold text-gray-900">学んで安心</h1>
     <p class="mt-2 text-sm text-gray-600">
         テーマを選んでコラムを読み、関連するみんなの声にも進めます。
     </p>

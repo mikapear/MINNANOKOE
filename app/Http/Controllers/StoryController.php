@@ -124,7 +124,7 @@ class StoryController extends Controller
         $post = Post::query()
             ->published()
             ->where('slug', $slug)
-            ->with(['tags', 'user'])
+            ->with(['tags', 'user', 'likes'])
             ->firstOrFail();
 
         $tagIds = $post->tags->pluck('id');

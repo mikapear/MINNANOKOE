@@ -44,7 +44,7 @@
             <textarea id="body" name="body" rows="12" required
                 class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('body', $post->status === \App\Enums\PostStatus::Suggested ? $post->body_published : $post->body_original) }}</textarea>
             <div class="mt-1 text-right text-xs text-gray-500">
-                <span id="char-count">0</span> / 20000文字
+                <span id="char-count">0</span> / 3000文字
             </div>
             
             <x-input-error :messages="$errors->get('body')" class="mt-2" />
@@ -68,15 +68,10 @@
 
                         <div class="flex flex-wrap gap-2">
                             @foreach($group->tags as $tag)
-                                <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 px-3 py-1.5 text-sm hover:bg-pink-50">
-                                    <input
-                                        type="checkbox"
-                                        name="tag_ids[]"
-                                        value="{{ $tag->id }}"
-                                        @checked($selected->contains($tag->id))
-                                    />
-                                    <span>#{{ $tag->name }}</span>
-                                </label>
+                                <x-tag-checkbox
+                                    :tag="$tag"
+                                    :checked="$selected->contains($tag->id)"
+                                />
                             @endforeach
                         </div>
                     </div>

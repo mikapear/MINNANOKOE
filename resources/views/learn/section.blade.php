@@ -8,8 +8,23 @@
     <ul class="mt-8 space-y-3">
         @forelse($columns as $column)
             <li>
-                <a href="{{ route('learn.show', [$section->slug, $column->slug]) }}" class="block rounded-lg border border-gray-200 bg-white p-4 font-medium text-indigo-800 shadow-sm hover:border-indigo-300">
-                    {{ $column->title }}
+                <a
+                    href="{{ route('learn.show', [$section->slug, $column->slug]) }}"
+                    class="block rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:border-indigo-300"
+                >
+                    <div class="flex items-center gap-3">
+                        @if($column->character)
+                            <img
+                                src="{{ asset($column->character->icon_path) }}"
+                                alt="{{ $column->character->name }}"
+                                class="h-12 w-12 rounded-full object-cover"
+                            >
+                        @endif
+
+                        <span class="font-medium text-indigo-800">
+                            {{ $column->title }}
+                        </span>
+                    </div>
                 </a>
             </li>
         @empty

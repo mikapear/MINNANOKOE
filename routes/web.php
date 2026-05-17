@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LearnColumnController;
 use App\Http\Controllers\Admin\LearnSectionController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\LikeController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -58,6 +59,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/me/posts/{post}/accept-suggestion', [MyPostController::class, 'acceptSuggestion'])
     ->name('me.posts.accept-suggestion');
     Route::delete('/me/posts/{post}', [MyPostController::class, 'destroy'])->name('me.posts.destroy');
+    Route::post('/posts/{post}/like', [LikeController::class, 'togglePost'])
+        ->name('posts.like');
+
+    Route::post('/learn-columns/{learnColumn}/like', [LikeController::class, 'toggleLearnColumn'])
+        ->name('learn-columns.like');
 
 });
 

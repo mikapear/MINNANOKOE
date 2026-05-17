@@ -19,7 +19,7 @@
                         物語を探す
                     </x-nav-link>
                     <x-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.*')">
-                        学んで成長
+                        学んで安心
                     </x-nav-link>
                     <x-nav-link :href="route('me.posts')" :active="request()->routeIs('me.posts*')">
                         マイ投稿
@@ -87,7 +87,7 @@
                 物語を探す
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.*')">
-                学んで成長
+                学んで安心
             </x-responsive-nav-link>
         </div>
 

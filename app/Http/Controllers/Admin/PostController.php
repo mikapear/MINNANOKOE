@@ -48,7 +48,7 @@ class PostController extends Controller
         }
 
         $validated = $request->validate([
-            'body_published' => ['nullable', 'string', 'max:20000'],
+            'body_published' => ['nullable', 'string', 'max:3000'],
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
@@ -66,7 +66,7 @@ class PostController extends Controller
     public function suggest(Request $request, Post $post): RedirectResponse
     {
         $validated = $request->validate([
-            'body_published' => ['required', 'string', 'min:1', 'max:20000'],
+            'body_published' => ['required', 'string', 'min:1', 'max:3000'],
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
@@ -92,7 +92,7 @@ class PostController extends Controller
     protected function handlePublish(Request $request, Post $post): RedirectResponse
     {
         $validated = $request->validate([
-            'body_published' => ['required', 'string', 'min:1', 'max:20000'],
+            'body_published' => ['required', 'string', 'min:1', 'max:3000'],
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],

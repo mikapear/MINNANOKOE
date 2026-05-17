@@ -10,7 +10,7 @@
             ステータス
             <select name="status" class="ml-1 rounded border-gray-300 text-sm" onchange="this.form.submit()">
                 <option value="">すべて</option>
-                <option value="pending" @selected(($status ?? '') === 'pending')>審査待ち</option>
+                <option value="pending" @selected(($status ?? '') === 'pending')>公開準備待ち</option>
                 <option value="published" @selected(($status ?? '') === 'published')>公開</option>
                 <option value="rejected" @selected(($status ?? '') === 'rejected')>掲載見送り</option>
                 <option value="hidden" @selected(($status ?? '') === 'hidden')>非表示</option>

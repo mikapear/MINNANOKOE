@@ -3,26 +3,19 @@
         <a href="{{ route('home') }}" class="text-lg font-semibold text-indigo-700">みんなの声辞典</a>
         <div class="flex flex-wrap items-center gap-3 text-sm">
             <a href="{{ route('stories.index') }}" class="text-gray-700 hover:text-indigo-600">物語を探す</a>
-            <a href="{{ route('learn.index') }}" class="text-gray-700 hover:text-indigo-600">学んで成長</a>
             <a href="{{ route('share.create') }}" class="text-gray-700 hover:text-indigo-600">物語のシェア</a>
+            <a href="{{ route('learn.index') }}" class="text-gray-700 hover:text-indigo-600">学んで安心</a>
+
             @auth
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.posts.index') }}" class="text-amber-700 font-medium">投稿管理</a>
-                    <a href="{{ route('admin.learn-columns.index') }}"
-                        class="text-amber-700 font-medium hover:text-amber-800">コラム管理</a>
-                        <a href="{{ route('admin.learn-sections.index') }}"
-                            class="text-amber-700 font-medium hover:text-amber-800">
-                                学びカテゴリ管理
-                        </a>
-                    <a href="{{ route('admin.tags.index') }}"
-                        class="text-amber-700 font-medium hover:text-amber-800">
-                            タグ管理
-                    </a>
+                    <a href="{{ route('admin.tags.index') }}"class="text-amber-700 font-medium hover:text-amber-800">タグ管理</a>
+                    <a href="{{ route('admin.learn-columns.index') }}"class="text-amber-700 font-medium hover:text-amber-800">コラム管理</a>
+                    <a href="{{ route('admin.learn-sections.index') }}"class="text-amber-700 font-medium hover:text-amber-800">学びカテゴリ管理</a>
+
                 @endif
                 <a href="{{ route('me.posts') }}" class="text-gray-700 hover:text-indigo-600">マイ投稿</a>
-                <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-indigo-600">
-                    プロフィール編集
-                </a>
+                <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-indigo-600">プロフィール編集</a>
                 <span class="text-gray-400">|</span>
                 <span class="text-gray-600">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}" class="inline">

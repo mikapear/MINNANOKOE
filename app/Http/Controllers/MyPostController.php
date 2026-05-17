@@ -8,6 +8,7 @@ use App\Models\TagGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 class MyPostController extends Controller
 {
@@ -15,11 +16,25 @@ class MyPostController extends Controller
     {
         $posts = Post::query()
             ->where('user_id', $request->user()->id)
-            ->with(['tags', 'user'])
+            ->with(['tags', 'user', 'likes'])
             ->latest()
             ->paginate(20);
 
         return view('my-posts.index', compact('posts'));
+    }
+
+    private function ensureUserCanEdit(Post $post): void
+    {
+        $editableStatuses = [
+            PostStatus::Draft,
+            PostStatus::Suggested,
+            PostStatus::Published,
+        ];
+
+        abort_unless(
+            in_array($post->status, $editableStatuses, true),
+            Response::HTTP_FORBIDDEN
+        );
     }
 
     public function edit(Request $request, Post $post): View
@@ -27,7 +42,7 @@ class MyPostController extends Controller
         if ($post->user_id !== $request->user()->id) {
             abort(403);
         }
-
+        $this->ensureUserCanEdit($post);
         $tagGroups = TagGroup::with('tags')
             ->orderBy('sort_order')
             ->get();
@@ -44,8 +59,9 @@ class MyPostController extends Controller
             abort(403);
         }
 
+        $this->ensureUserCanEdit($post);
         $validated = $request->validate([
-            'body' => ['required', 'string', 'min:10', 'max:20000'],
+            'body' => ['required', 'string', 'min:10', 'max:3000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'action' => ['required', 'in:draft,submit'],

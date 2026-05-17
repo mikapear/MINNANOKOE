@@ -44,6 +44,11 @@
                     @endforeach
                 </div>
             @endif
+            <x-like-button
+                :action="route('posts.like', $post)"
+                :count="$post->likes->count()"
+            />
+            
         </div>
     </article>
 

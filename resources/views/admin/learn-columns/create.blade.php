@@ -31,6 +31,11 @@
             </select>
         </div>
 
+        <x-character-select
+            :characters="$characters"
+            :selected-character-id="null"
+        />
+
         <div>
             <label for="title" class="block text-sm font-medium text-gray-700">
                 タイトル
@@ -86,14 +91,10 @@
 
                         <div class="flex flex-wrap gap-2">
                             @foreach($group->tags as $tag)
-                                <label class="inline-flex items-center gap-2 rounded-full border border-gray-300 px-3 py-1.5 text-sm">
-                                    <input
-                                        type="checkbox"
-                                        name="tag_ids[]"
-                                        value="{{ $tag->id }}"
-                                    >
-                                    <span>#{{ $tag->name }}</span>
-                                </label>
+                                <x-tag-checkbox
+                                    :tag="$tag"
+                                    :checked="collect(old('tag_ids', []))->contains($tag->id)"
+                                />
                             @endforeach
                         </div>
                     </div>

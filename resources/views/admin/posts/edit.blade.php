@@ -35,7 +35,7 @@
             <textarea id="summary" name="summary" rows="3"
                 class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('summary', $post->summary) }}</textarea>
             <div class="mt-1 text-right text-xs text-gray-500">
-                <span id="char-count">0</span> / 20000文字
+                <span id="char-count">0</span> / 3000文字
             </div>
             
         </div>
@@ -63,15 +63,10 @@
 
                     <div class="flex flex-wrap gap-2">
                         @foreach($group->tags as $tag)
-                            <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50">
-                                <input
-                                    type="checkbox"
-                                    name="tag_ids[]"
-                                    value="{{ $tag->id }}"
-                                    @checked($sel->contains($tag->id))
-                                />
-                                <span>#{{ $tag->name }}</span>
-                            </label>
+                            <x-tag-checkbox
+                                :tag="$tag"
+                                :checked="$sel->contains($tag->id)"
+                            />
                         @endforeach
                     </div>
                 </div>

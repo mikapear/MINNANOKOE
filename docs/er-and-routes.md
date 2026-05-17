@@ -122,7 +122,7 @@ erDiagram
 | `tags.tag_kind` + `tag_groups`          | 「悩み／年齢／状況」ボタンと自由タグを同一 `tags` テーブルに載せつつ、画面別ソート・初期シードをしやすくする |
 | `posts.slug`                            | 記事詳細の RESTful URL に使う                                                                                |
 | `social_accounts` 別表                  | Google 以外のプロバイダを増やしやすい                                                                        |
-| `learn_sections` → `columns`            | 「学んで成長」の階層（運動・食事・副作用など）を表す                                                         |
+| `learn_sections` → `columns`            | 「学んで安心」の階層（運動・食事・副作用など）を表す                                                         |
 | `post_admin_actions`                    | 任意。監査ログが不要なら最初は省略し `posts.reviewed_*` のみでも可                                           |
 
 ### インデックス案
@@ -276,7 +276,7 @@ published → hidden（管理側で非公開）
 | GET      | `/stories/by/situation/{slug}`      | 子育て・仕事・介護など                                  |
 | GET      | `/stories/tags/{slug}`              | タグ絞り込み一覧                                        |
 | GET      | `/stories/{slug}`                   | 記事詳細（公開済みのみ）                                |
-| GET      | `/learn`                            | 学んで成長（セクション一覧）                            |
+| GET      | `/learn`                            | 学んで安心（セクション一覧）                            |
 | GET      | `/learn/{sectionSlug}`              | セクション内コラム一覧                                  |
 | GET      | `/learn/{sectionSlug}/{columnSlug}` | コラム本文＋関連記事                                    |
 

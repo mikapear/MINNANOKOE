@@ -4,13 +4,37 @@
 
 @section('content')
     <nav class="text-xs text-gray-500">
-        <a href="{{ route('learn.index') }}" class="hover:underline">学んで成長</a>
+        <a href="{{ route('learn.index') }}" class="hover:underline">学んで安心</a>
         <span class="mx-1">/</span>
         <a href="{{ route('learn.section', $section->slug) }}" class="hover:underline">{{ $section->name }}</a>
     </nav>
 
     <article class="mt-4 rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-100">
-        <h1 class="text-2xl font-bold text-gray-900">{{ $column->title }}</h1>
+
+        @if($column->character)
+            <div class="flex items-center gap-3">
+                <img
+                    src="{{ asset($column->character->icon_path) }}"
+                    alt="{{ $column->character->name }}"
+                    class="h-16 w-16 rounded-full"
+                >
+
+                <h1 class="text-2xl font-bold text-gray-900">
+                    {{ $column->title }}
+                </h1>
+            </div>
+        @else
+            <h1 class="text-2xl font-bold text-gray-900">
+                {{ $column->title }}
+        </h1>
+        @endif
+
+        <x-like-button
+            :action="route('learn-columns.like', $column)"
+            :count="$column->likes->count()"
+            class="mt-4"
+        />
+
         <div class="prose prose-indigo mt-6 max-w-none text-gray-800">
             {!! $column->body !!}
         </div>

@@ -31,7 +31,7 @@ class LearnController extends Controller
             ->where('learn_section_id', $section->id)
             ->where('slug', $columnSlug)
             ->where('is_published', true)
-            ->with(['section', 'tags'])
+            ->with(['section', 'tags','character','likes'])
             ->firstOrFail();
 
         $tagIds = $column->tags->pluck('id');

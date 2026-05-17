@@ -33,7 +33,7 @@
                     ">
                         @switch($post->status->value)
                             @case('published') 公開中 @break
-                            @case('pending') 審査中 @break
+                            @case('pending') 公開準備中 @break
                             @case('draft') 下書き @break
                             @case('suggested') 修正提案あり 
                             @break
@@ -45,6 +45,10 @@
                     <span class="text-xs text-gray-500">{{ $post->updated_at->timezone(config('app.timezone'))->format('Y/m/d H:i') }}</span>
                 </div>
                 <p class="mt-2 text-sm text-gray-800">{{ \Illuminate\Support\Str::limit($post->body_original, 120) }}</p>
+
+                <div class="mt-2 text-xs text-pink-600">
+                    ♡ {{ $post->likes->count() }}
+                </div>
 
                 @if($post->user)
                     @php
@@ -87,11 +91,16 @@
                         <span class="font-medium">掲載見送り理由:</span> {{ $post->rejection_reason }}
                     </p>
                 @endif
-                @if(in_array($post->status->value, ['draft', 'pending', 'suggested','rejected', 'published'], true))
+                @if(in_array($post->status->value, ['draft', 'suggested','rejected', 'published'], true))
                     <a href="{{ route('me.posts.edit', $post) }}"
                         class="mt-3 inline-block text-sm text-indigo-600 hover:underline">
                         編集
                     </a>
+                @else
+
+                    <span class="mt-3 inline-block text-sm text-gray-400">
+                        編集不可
+                    </span>
                 @endif
 
                 <form method="post"

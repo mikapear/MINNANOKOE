@@ -19,7 +19,7 @@
             物語を探す
         </a>
         <a href="{{ route('learn.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
-            学んで成長
+            学んで安心
         </a>
     </div>
 
