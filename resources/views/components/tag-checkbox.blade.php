@@ -7,7 +7,31 @@
         @checked($checked)
     />
 
-    <span class="inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:bg-pink-50 peer-checked:border-pink-400 peer-checked:bg-pink-100 peer-checked:text-pink-700 peer-checked:font-semibold">
+    <span class="
+        inline-flex items-center rounded-full
+
+        border border-stone-200/80
+        bg-white/90
+
+        px-4 py-2
+
+        text-sm font-medium
+        text-stone-700
+
+        transition-all duration-200
+
+        hover:border-stone-300
+        hover:bg-stone-50
+        hover:text-stone-800
+
+        peer-checked:border-yellow-200
+        peer-checked:bg-[#fff9e6]
+        peer-checked:text-stone-900
+
+        peer-checked:shadow-[0_0_14px_rgba(255,245,200,0.28)]
+
+        backdrop-blur-sm
+    ">
         #{{ $tag->name }}
     </span>
 </label>

@@ -10,8 +10,13 @@
         @csrf
         <div>
             <label for="body" class="block text-sm font-medium text-gray-700">あなたの体験・工夫・いま思うこと</label>
-            <textarea id="body" name="body" rows="12" required
-                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('body') }}</textarea>
+
+            <div class="story-magic-box mt-1">
+                <textarea id="body" name="body" rows="12" required
+                    class="story-textarea"
+                    placeholder="ここに、あなたの物語を書いてください">{{ old('body') }}</textarea>
+
+            </div>
             <div class="mt-1 text-right text-xs text-gray-500">
                 <span id="char-count">0</span> / 3000文字
             </div>
@@ -82,14 +87,64 @@
     const textarea = document.getElementById('body');
     const charCount = document.getElementById('char-count');
 
-    function updateCharCount() {
-        charCount.textContent = textarea.value.length;
-    }
+    let glowTimer;
 
-    textarea.addEventListener('input', updateCharCount);
-    updateCharCount();
+    textarea.addEventListener('input', function () {
+
+        charCount.textContent = textarea.value.length;
+
+        textarea.classList.add('typing-glow');
+
+        clearTimeout(glowTimer);
+
+        glowTimer = setTimeout(function () {
+            textarea.classList.remove('typing-glow');
+        }, 400);
+    });
+
+    charCount.textContent = textarea.value.length;
 </script>
 
+<style>
+    .story-textarea:focus {
+        outline: none !important;
+        box-shadow:
+            0 0 18px rgba(255, 220, 120, 0.45),
+            0 0 48px rgba(255, 245, 200, 0.28) !important;
+    }
+    .story-textarea {
+        width: 100%;
+        min-height: 320px;
+        padding: 24px;
 
+        border: none;
+        border-radius: 20px;
+
+        resize: vertical;
+        outline: none;
+
+        font-size: 15px;
+        line-height: 1.9em;
+
+        color: #4b3b2a;
+
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(2px);
+
+        transition:
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+
+        box-shadow:
+            0 0 12px rgba(255, 225, 160, 0.12);
+    }
+
+    .story-textarea.typing-glow {
+        box-shadow:
+            0 0 20px rgba(255, 245, 220, 0.9),
+            0 0 50px rgba(255, 240, 200, 0.7),
+            0 0 90px rgba(255, 255, 240, 0.45) !important;
+    }
+</style>
 
 @endsection
