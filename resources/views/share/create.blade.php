@@ -4,7 +4,19 @@
 
 @section('content')
     <h1 class="text-2xl font-bold text-gray-900">物語のシェア</h1>
-    <p class="mt-2 text-sm text-gray-600">投稿は管理者の確認後に公開されます。個人が特定される情報は書かないでください。</p>
+    
+    <div class="mt-5 rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4 text-indigo-900">
+        <p class="text-sm font-semibold">
+            何を書いてもいいです。たとえば、
+            <span class="text-sm font-semibold">
+                治療中の気持ち、不安、助けられた言葉、日々の工夫、今だから思うこと。
+            </span>
+        </p>
+
+        <p class="mt-2 text-xs leading-relaxed text-indigo-800">
+            きれいにまとめなくても大丈夫です。あなたの言葉が、次の誰かの支えになるかもしれません。
+        </p>
+    </div>
 
     <form method="post" action="{{ route('share.store') }}" class="mt-8 space-y-6">
         @csrf
@@ -21,6 +33,40 @@
                 <span id="char-count">0</span> / 3000文字
             </div>
             <x-input-error :messages="$errors->get('body')" class="mt-2" />
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">
+                今の気持ちに近い鳥を選んでください
+            </label>
+
+            <div class="mt-3 flex flex-wrap gap-4">
+                @foreach ($characters as $character)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="character_id"
+                            value="{{ $character->id }}"
+                            class="peer sr-only"
+                            @checked(old('character_id') == $character->id)
+                        >
+
+                        <div class="rounded-2xl border border-gray-200 bg-white p-3 text-center shadow-sm transition hover:bg-yellow-50 peer-checked:border-yellow-300 peer-checked:bg-yellow-50 peer-checked:ring-2 peer-checked:ring-yellow-200">
+                            <img
+                                src="{{ asset($character->icon_path) }}"
+                                alt="{{ $character->name }}"
+                                class="mx-auto h-16 w-16"
+                            >
+
+                            <div class="mt-2 text-sm text-gray-700">
+                                {{ $character->name }}
+                            </div>
+                        </div>
+                    </label>
+                @endforeach
+            </div>
+
+            <x-input-error :messages="$errors->get('character_id')" class="mt-2" />
         </div>
 
         <fieldset>
@@ -62,6 +108,10 @@
             </div>
 
         </fieldset>
+
+        <p class="mt-2 text-sm text-gray-600">
+            ※投稿は管理者の確認後に公開されます。個人が特定される情報は書かないでください。
+        </p>
 
         <div class="flex gap-3">
             <button

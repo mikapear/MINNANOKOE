@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Models\Character;
 
 class Post extends Model
 {
     protected $fillable = [
         'user_id',
         'slug',
+        'character_id',
         'body_original',
         'body_published',
         'summary',
@@ -47,6 +49,11 @@ class Post extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'post_tag');
+    }
+
+    public function character(): BelongsTo
+    {
+        return $this->belongsTo(Character::class);
     }
 
     public function likes(): MorphMany

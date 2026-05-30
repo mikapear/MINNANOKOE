@@ -55,7 +55,25 @@
     <ul class="mt-8 space-y-4">
         @forelse($posts as $post)
             <li class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <a href="{{ route('stories.show', $post->slug) }}" class="font-medium text-indigo-700 hover:underline">
+
+                <div class="flex items-start gap-3">
+                    @if($post->character)
+                        <img
+                            src="{{ asset($post->character->icon_path) }}"
+                            alt="{{ $post->character->name }}"
+                            class="mt-1 h-10 w-10 shrink-0"
+                        >
+                    @endif
+
+                    <div>
+                        <a href="{{ route('stories.show', $post->slug) }}"
+                            class="font-medium text-indigo-700 hover:underline">
+
+                            {{ \Illuminate\Support\Str::limit(strip_tags($post->body_published), 80) }}
+
+                        </a>
+                    </div>
+                </div>
                     {{ \Illuminate\Support\Str::limit(strip_tags($post->body_published), 80) }}
                 </a>
                 <p class="mt-2 text-xs text-gray-500">{{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}</p>

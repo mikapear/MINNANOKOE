@@ -18,7 +18,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'user'])
+            ->with(['tags', 'character', 'user'])
             ->when($q !== '', function ($query) use ($q) {
                 $like = '%'.addcslashes($q, '%_\\').'%';
                 $query->where(function ($qry) use ($like) {
@@ -101,7 +101,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'user'])
+            ->with(['tags', 'character', 'user'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
@@ -124,7 +124,7 @@ class StoryController extends Controller
         $post = Post::query()
             ->published()
             ->where('slug', $slug)
-            ->with(['tags', 'user', 'likes'])
+            ->with(['tags', 'user', 'character', 'likes'])
             ->firstOrFail();
 
         $tagIds = $post->tags->pluck('id');
@@ -155,7 +155,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'user'])
+            ->with(['tags', 'user', 'character'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
