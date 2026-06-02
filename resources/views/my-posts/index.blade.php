@@ -4,7 +4,12 @@
 
 @section('content')
     <h1 class="text-2xl font-bold text-gray-900">マイ投稿</h1>
-
+    @if(session('error'))
+        <p class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+            {{ session('error') }}
+        </p>
+    @endif
+    
     @if(session('status') === 'posted')
         <p class="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-800">投稿を受け付けました。公開までお待ちください。</p>
     @endif
@@ -44,7 +49,23 @@
                     </span>
                     <span class="text-xs text-gray-500">{{ $post->updated_at->timezone(config('app.timezone'))->format('Y/m/d H:i') }}</span>
                 </div>
-                <p class="mt-2 text-sm text-gray-800">{{ \Illuminate\Support\Str::limit($post->body_original, 120) }}</p>
+                <p class="mt-2 text-sm text-gray-800">
+                    <div class="flex items-start gap-3 mt-2">
+                        @if($post->character)
+                            <img
+                                src="{{ asset($post->character->icon_path) }}"
+                                alt="{{ $post->character->name }}"
+                                class="mt-1 h-10 w-10 shrink-0"
+                            >
+                        @endif
+
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-800">
+                                {{ \Illuminate\Support\Str::limit($post->body_original, 120) }}
+                            </p>
+                        </div>
+                    </div>
+                </p>
 
                 <div class="mt-2 text-xs text-pink-600">
                     ♡ {{ $post->likes->count() }}

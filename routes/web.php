@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\LearnColumnController;
 use App\Http\Controllers\Admin\LearnSectionController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -61,7 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/me/posts/{post}', [MyPostController::class, 'destroy'])->name('me.posts.destroy');
     Route::post('/posts/{post}/like', [LikeController::class, 'togglePost'])
         ->name('posts.like');
-
     Route::post('/learn-columns/{learnColumn}/like', [LikeController::class, 'toggleLearnColumn'])
         ->name('learn-columns.like');
 
@@ -83,6 +83,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/me/posts/{post}', [MyPostController::class, 'destroy'])->name('me.posts.destroy');
     Route::post('/posts/{post}/unpublish', [AdminPostController::class, 'unpublish'])->name('posts.unpublish');
     Route::post('/posts/{post}/reject', [AdminPostController::class, 'reject'])->name('posts.reject');
+    
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
+
+    Route::patch('/users/{user}/stop',[UserController::class, 'stop'])
+        ->name('users.stop');
+
+    Route::patch('/users/{user}/activate',[UserController::class, 'activate'])
+        ->name('users.activate');
     
 });
 

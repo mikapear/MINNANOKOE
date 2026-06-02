@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\TagGroup;
+use App\Models\Character;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,7 +17,7 @@ class MyPostController extends Controller
     {
         $posts = Post::query()
             ->where('user_id', $request->user()->id)
-            ->with(['tags', 'user', 'likes'])
+            ->with(['tags', 'user', 'likes', 'character'])
             ->latest()
             ->paginate(20);
 
@@ -37,19 +38,28 @@ class MyPostController extends Controller
         );
     }
 
-    public function edit(Request $request, Post $post): View
+    public function edit(Request $request, Post $post): View|RedirectResponse
     {
         if ($post->user_id !== $request->user()->id) {
             abort(403);
         }
+
+        if (! $request->user()->is_active) {
+            return redirect()
+                ->route('me.posts')
+                ->with('error', 'このアカウントでは現在、投稿の編集はできません。');
+        }
+
         $this->ensureUserCanEdit($post);
         $tagGroups = TagGroup::with('tags')
             ->orderBy('sort_order')
             ->get();
+        $characters = Character::where('type', 'story')->get();
 
         return view('my-posts.edit', [
             'post' => $post,
             'tagGroups' => $tagGroups,
+            'characters' => $characters,
         ]);
     }
 
@@ -59,12 +69,19 @@ class MyPostController extends Controller
             abort(403);
         }
 
+        if (! $request->user()->is_active) {
+            return redirect()
+                ->route('me.posts')
+                ->with('error', 'このアカウントでは現在、投稿の編集はできません。');
+        }
+
         $this->ensureUserCanEdit($post);
         $validated = $request->validate([
             'body' => ['required', 'string', 'min:10', 'max:3000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'action' => ['required', 'in:draft,submit'],
+            'character_id' => ['required', 'integer', 'exists:characters,id'],
         ]);
         $status = $validated['action'] === 'draft'
             ? PostStatus::Draft
@@ -79,6 +96,7 @@ class MyPostController extends Controller
             'rejection_reason' => null,
             'reviewed_by' => null,
             'reviewed_at' => null,
+            'character_id' => $validated['character_id'],
         ]);
 
         $post->tags()->sync($validated['tag_ids'] ?? []);
@@ -100,6 +118,11 @@ class MyPostController extends Controller
 
     public function acceptSuggestion(Post $post): RedirectResponse
     {
+        if (! auth()->user()->is_active) {
+            return redirect()
+                ->route('me.posts')
+                ->with('error', 'このアカウントでは現在、再投稿はできません。');
+        }
         abort_unless($post->user_id === auth()->id(), 403);
 
         abort_unless($post->status === PostStatus::Suggested, 403);

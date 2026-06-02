@@ -25,38 +25,97 @@
     <ul class="mt-8 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white">
         @foreach($posts as $post)
             <li class="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <span class="text-xs font-medium uppercase text-gray-500">{{ $post->status->value }}</span>
-                    <p class="mt-1 text-sm text-gray-900">{{ \Illuminate\Support\Str::limit($post->body_original, 100) }}</p>
-                    <p class="text-xs text-gray-500">{{ $post->user->email }} · {{ $post->updated_at->format('Y/m/d H:i') }}</p>
-
-                    @if($post->user)
-
-                        @php
-                            $treatmentLabels = config('minnanokoe.treatment_types');
-
-                            $treatments = collect((array) $post->user->treatment_types)
-                                ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
-                                ->implode('・');
-                        @endphp
-
-                        <p class="mt-1 text-xs text-gray-500">
-
-                            @if($post->user->birth_date)
-                                現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
-                            @endif
-
-                            @if($post->user->birth_date && $post->user->diagnosed_at)
-                                ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
-                            @endif
-
-                            @if($treatments)
-                                ｜治療: {{ $treatments }}
-                            @endif
-
-                        </p>
-
+                <div class="flex items-start gap-3">
+                    @if($post->character)
+                        <img
+                            src="{{ asset($post->character->icon_path) }}"
+                            alt="{{ $post->character->name }}"
+                            class="mt-1 h-10 w-10 shrink-0"
+                        >
                     @endif
+
+                    <div>
+                        <span class="text-xs font-medium uppercase text-gray-500">{{ $post->status->value }}</span>
+                        <p class="mt-1 text-sm text-gray-900">
+                            {{ \Illuminate\Support\Str::limit($post->body_original, 100) }}
+                        </p>
+                        @if($post->user)
+                            <div class="mt-2 rounded-md bg-gray-50 p-2 text-xs text-gray-600">
+                                <p>
+                                    投稿者：
+                                    <span class="font-medium text-gray-800">
+                                        {{ $post->user->name }}
+                                    </span>
+                                    /
+                                    {{ $post->user->email }}
+                                </p>
+
+                                <p class="mt-1">
+                                    状態：
+                                    @if($post->user->is_active)
+                                        <span class="rounded-full bg-green-100 px-2 py-0.5 text-green-700">
+                                            有効
+                                        </span>
+                                    @else
+                                        <span class="rounded-full bg-red-100 px-2 py-0.5 text-red-700">
+                                            停止中
+                                        </span>
+                                    @endif
+
+                                    <span class="ml-2 text-gray-400">
+                                        更新：{{ $post->updated_at->format('Y/m/d H:i') }}
+                                    </span>
+                                </p>
+
+                                @if(!$post->user->is_admin && $post->user->is_active)
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.users.stop', $post->user) }}"
+                                        class="mt-2"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <button
+                                            type="submit"
+                                            class="rounded bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
+                                            onclick="return confirm('この投稿者を停止しますか？')"
+                                        >
+                                            この投稿者を停止
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endif
+
+                        @if($post->user)
+
+                            @php
+                                $treatmentLabels = config('minnanokoe.treatment_types');
+
+                                $treatments = collect((array) $post->user->treatment_types)
+                                    ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
+                                    ->implode('・');
+                            @endphp
+
+                            <p class="mt-1 text-xs text-gray-500">
+
+                                @if($post->user->birth_date)
+                                    現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
+                                @endif
+
+                                @if($post->user->birth_date && $post->user->diagnosed_at)
+                                    ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
+                                @endif
+
+                                @if($treatments)
+                                    ｜治療: {{ $treatments }}
+                                @endif
+
+                            </p>
+                    
+                        @endif
+                    </div>
                 </div>
                 <a href="{{ route('admin.posts.edit', $post) }}" class="text-sm font-medium text-indigo-600 hover:underline">確認・編集</a>
             </li>

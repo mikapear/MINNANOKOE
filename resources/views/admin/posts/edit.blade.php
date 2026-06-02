@@ -17,7 +17,21 @@
 
     <section class="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
         <h2 class="text-sm font-semibold text-gray-700">ユーザー原文</h2>
-        <div class="mt-2 whitespace-pre-wrap text-sm text-gray-900">{{ $post->body_original }}</div>
+
+        <div class="mt-3 flex items-start gap-1">
+
+            @if($post->character)
+                <img
+                    src="{{ asset($post->character->icon_path) }}"
+                    alt="{{ $post->character->name }}"
+                    class="h-12 w-12 shrink-0"
+                >
+            @endif
+
+                <div class="whitespace-pre-wrap text-sm text-gray-900">
+                    {{ $post->body_original }}
+                </div>
+        </div>
     </section>
 
     <form id="admin-post-form" method="post" action="{{ route('admin.posts.update', $post) }}" class="mt-8 space-y-6">

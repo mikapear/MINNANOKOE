@@ -12,19 +12,30 @@ use Illuminate\View\View;
 
 class ShareController extends Controller
 {
-    public function create(): View
+    public function create(Request $request): View|RedirectResponse
     {
-    $tagGroups = TagGroup::with('tags')
-        ->orderBy('sort_order')
-        ->get();
-    $characters = Character::where('type', 'story')
-        ->get();
+        if (! $request->user()->is_active) {
+        return redirect()
+            ->route('me.posts')
+            ->with('error', 'このアカウントでは現在、新規投稿はできません。');
+        }
+        $tagGroups = TagGroup::with('tags')
+            ->orderBy('sort_order')
+            ->get();
+        $characters = Character::where('type', 'story')
+            ->get();
 
-    return view('share.create', compact('tagGroups', 'characters'));
+        return view('share.create', compact('tagGroups', 'characters'));
     }
 
     public function store(Request $request): RedirectResponse
-    {
+    {   
+        if (! $request->user()->is_active) {
+            return redirect()
+                ->route('me.posts')
+                ->with('error', 'このアカウントでは現在、新規投稿はできません。');
+        }
+
         $validated = $request->validate([
             'body' => ['required', 'string', 'min:5', 'max:3000'],
             'tag_ids' => ['nullable', 'array'],

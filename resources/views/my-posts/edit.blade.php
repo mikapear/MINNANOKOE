@@ -49,7 +49,43 @@
             
             <x-input-error :messages="$errors->get('body')" class="mt-2" />
         </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">
+                今の気持ちに近い鳥を選んでください
+            </label>
 
+            @php
+                $selectedCharacterId = old('character_id', $post->character_id);
+            @endphp
+
+            <div class="mt-3 flex flex-wrap gap-4">
+                @foreach ($characters as $character)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="character_id"
+                            value="{{ $character->id }}"
+                            class="peer sr-only"
+                            @checked($selectedCharacterId == $character->id)
+                        >
+
+                        <div class="rounded-2xl border border-gray-200 bg-white p-3 text-center shadow-sm transition hover:bg-yellow-50 peer-checked:border-yellow-300 peer-checked:bg-yellow-50 peer-checked:ring-2 peer-checked:ring-yellow-200">
+                            <img
+                                src="{{ asset($character->icon_path) }}"
+                                alt="{{ $character->name }}"
+                                class="mx-auto h-16 w-16"
+                            >
+
+                            <div class="mt-2 text-sm text-gray-700">
+                                {{ $character->name }}
+                            </div>
+                        </div>
+                    </label>
+                @endforeach
+            </div>
+
+            <x-input-error :messages="$errors->get('character_id')" class="mt-2" />
+        </div>
         <fieldset>
             <legend class="text-sm font-medium text-gray-700">
                 タグ

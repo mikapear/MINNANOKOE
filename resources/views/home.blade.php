@@ -11,13 +11,14 @@
         <p class="text-sm text-gray-600">プロジェクト <span class="font-semibold">Survivor+</span></p>
         <div class="mx-auto max-w-2xl space-y-3 text-center">
             <p class="text-lg font-medium leading-relaxed text-indigo-900 sm:text-lg">
-                治療中に感じたこと、不安だったこと、
+                不安だったこと、
+                頑張ったこと、
                 助けられた言葉や日々の工夫。
             </p>
 
             <p class="text-lg font-medium leading-relaxed text-indigo-900 sm:text-lg">
                 「みんなの声辞典」は、
-                がん経験者の声を残し、
+                乳がん経験者の声と記憶を残し、
                 次の誰かを支えるための場所です。
             </p>
         </div>
@@ -37,9 +38,8 @@
                     >
                 </div>
 
-                <p class="mx-auto max-w-[220px]" text-sm text-indigo-800 leading-relaxed>
-                    あなたの経験や想いを次の誰かへ
-                    届けます
+                <p class="mx-auto max-w-[220px] text-sm text-indigo-800 leading-relaxed">
+                    あなたの経験や想いを届けます
                 </p>
             </div>
         </a>
@@ -56,9 +56,8 @@
                     >
                 </div>
                 
-                <p class="mx-auto max-w-[220px]" text-sm text-indigo-800 leading-relaxed>
-                    同じ悩みや経験を持つ人の声を
-                    探せます
+                <p class="mx-auto max-w-[220px] text-sm text-indigo-800 leading-relaxed">
+                    同じ経験を持つ人の声を探せます
                 </p>
 
             </div>
@@ -76,8 +75,8 @@
                     >
                 </div>
                 
-                <p class="mx-auto max-w-[220px]" text-sm text-indigo-800 leading-relaxed>
-                    治療や生活に役立つ情報を優しく学べます
+                <p class="mx-auto max-w-[220px] text-sm text-indigo-800 leading-relaxed">
+                    治療や生活に役立つ情報を学べます
                 </p>
 
             </div>

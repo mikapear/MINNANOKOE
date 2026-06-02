@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
     'treatment_types',
     'privacy_consented_at',
     'is_admin',
+    'is_active',
 ])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -37,6 +38,7 @@ class User extends Authenticatable
             'treatment_types' => 'array',
             'privacy_consented_at' => 'datetime',
             'is_admin' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
