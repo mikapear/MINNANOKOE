@@ -47,7 +47,7 @@
                             type="radio"
                             name="character_id"
                             value="{{ $character->id }}"
-                            class="peer sr-only"
+                            class="mb-2"
                             @checked(old('character_id') == $character->id)
                         >
 
