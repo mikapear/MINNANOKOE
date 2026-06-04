@@ -5,7 +5,17 @@
 @section('content')
     <article class="prose prose-indigo max-w-none">
         <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-100">
-            <div class="text-gray-900 whitespace-pre-wrap">{{ $post->body_published }}</div>
+            <div class="flex items-center gap-2">
+                @if($post->character)
+                    <img
+                        src="{{ asset($post->character->icon_path) }}"
+                        alt="{{ $post->character->name }}"
+                        class="h-10 w-10 shrink-0"
+                    >
+                @endif
+
+                <div class="text-gray-900">{{ trim($post->body_published) }}</div>
+            </div>
 
             @if($post->user)
                 @php

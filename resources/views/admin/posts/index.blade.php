@@ -35,10 +35,24 @@
                     @endif
 
                     <div>
-                        <span class="text-xs font-medium uppercase text-gray-500">{{ $post->status->value }}</span>
-                        <p class="mt-1 text-sm text-gray-900">
-                            {{ \Illuminate\Support\Str::limit($post->body_original, 100) }}
-                        </p>
+                        <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium
+                            @switch($post->status->value)
+                                @case('published') bg-green-100 text-green-800 @break
+                                @case('pending') bg-yellow-100 text-yellow-800 @break
+                                @case('rejected') bg-red-100 text-red-800 @break
+                                @case('hidden') bg-gray-100 text-gray-700 @break
+                                @default bg-gray-100 text-gray-700
+                            @endswitch
+                        ">
+                            @switch($post->status->value)
+                                @case('pending') 公開準備待ち @break
+                                @case('published') 公開中 @break
+                                @case('rejected') 掲載見送り @break
+                                @case('hidden') 非表示 @break
+                                @default 状態不明
+                            @endswitch
+                        </span>
+                       
                         @if($post->user)
                             <div class="mt-2 rounded-md bg-gray-50 p-2 text-xs text-gray-600">
                                 <p>

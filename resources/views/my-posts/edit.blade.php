@@ -9,7 +9,7 @@
         <h2 class="text-sm font-semibold text-amber-900">
             管理者からのコメント
         </h2>
-        <p class="mt-2 text-sm text-amber-900 whitespace-pre-wrap">
+        <p class="mt-2 text-sm text-amber-900">
             {{ $post->rejection_reason }}
         </p>
     </div>
@@ -22,8 +22,18 @@
             あなたの元の投稿
         </label>
 
-        <div class="mt-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-3 text-sm whitespace-pre-wrap text-gray-700">
-            {{ $post->body_original }}
+        <div class="mt-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-3">
+            <div class="flex items-center gap-2">
+                @if($post->character)
+                    <img
+                        src="{{ asset($post->character->icon_path) }}"
+                        alt="{{ $post->character->name }}"
+                        class="h-10 w-10 shrink-0"
+                    >
+                @endif
+
+                <div class="text-sm text-gray-700">{{ trim($post->body_original) }}</div>
+            </div>
         </div>
     </div>
 
@@ -48,7 +58,20 @@
             </div>
             
             <x-input-error :messages="$errors->get('body')" class="mt-2" />
+
+            @if($post->summary)
+                <div class="mt-4 rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+                    <h2 class="text-sm font-semibold text-indigo-900">
+                        要約・ひとこと
+                    </h2>
+
+                    <p class="mt-2 text-sm text-indigo-900">
+                        {{ $post->summary }}
+                    </p>
+                </div>
+            @endif
         </div>
+
         <div>
             <label class="block text-sm font-medium text-gray-700">
                 今の気持ちに近い鳥を選んでください
