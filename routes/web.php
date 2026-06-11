@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\LearnSectionController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ThemeController;
+
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -92,6 +94,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::patch('/users/{user}/activate',[UserController::class, 'activate'])
         ->name('users.activate');
+    Route::resource('themes', ThemeController::class)
+    ->except(['show']);
     
 });
 

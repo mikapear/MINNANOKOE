@@ -4,16 +4,6 @@
 
 @section('content')
     <h1 class="text-2xl font-bold text-gray-900">投稿を編集</h1>
-@if($post->status === \App\Enums\PostStatus::Suggested && $post->rejection_reason)
-    <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-        <h2 class="text-sm font-semibold text-amber-900">
-            管理者からのコメント
-        </h2>
-        <p class="mt-2 text-sm text-amber-900">
-            {{ $post->rejection_reason }}
-        </p>
-    </div>
-@endif
 
 @if($post->status === \App\Enums\PostStatus::Suggested)
 
@@ -57,12 +47,23 @@
                 <span id="char-count">0</span> / 3000文字
             </div>
             
+            @if($post->status === \App\Enums\PostStatus::Suggested && $post->rejection_reason)
+                <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                    <h2 class="text-sm font-semibold text-amber-900">
+                        管理者からのコメント
+                    </h2>
+                    <p class="mt-2 text-sm text-amber-900">
+                    {{ $post->rejection_reason }}
+                    </p>
+                </div>
+            @endif
+
             <x-input-error :messages="$errors->get('body')" class="mt-2" />
 
             @if($post->summary)
                 <div class="mt-4 rounded-lg border border-indigo-200 bg-indigo-50 p-4">
                     <h2 class="text-sm font-semibold text-indigo-900">
-                        要約・ひとこと
+                        医療者からの補足
                     </h2>
 
                     <p class="mt-2 text-sm text-indigo-900">

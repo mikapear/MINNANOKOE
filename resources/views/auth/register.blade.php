@@ -253,7 +253,12 @@
 
         <label class="flex items-start gap-2 text-sm">
             <input type="checkbox" name="privacy" value="1" class="mt-1 rounded border-gray-300" @checked(old('privacy')) required />
-            <span>個人情報の取り扱いに同意します。</span>
+            <span>
+                <a href="{{ route('terms') }}" target="_blank" class="text-indigo-600 underline">利用規約</a>
+                および
+                <a href="{{ route('privacy') }}" target="_blank" class="text-indigo-600 underline">プライバシーポリシー</a>
+                に同意します。
+            </span>
         </label>
         <x-input-error :messages="$errors->get('privacy')" class="mt-2" />
 

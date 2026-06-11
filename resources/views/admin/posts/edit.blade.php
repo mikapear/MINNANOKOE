@@ -47,7 +47,16 @@
         </div>
 
         <div>
-            <label for="summary" class="block text-sm font-medium text-gray-700">要約・ひとこと（任意）</label>
+            <label for="admin_comment" class="block text-sm font-medium text-gray-700">
+                ユーザーへのコメント（修正提案時）
+            </label>
+            <textarea id="admin_comment" name="admin_comment" rows="3"
+                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('admin_comment', $post->rejection_reason) }}</textarea>
+            <x-input-error :messages="$errors->get('admin_comment')" class="mt-2" />
+        </div>
+
+        <div>
+            <label for="summary" class="block text-sm font-medium text-gray-700">医療者からの補足</label>
             <textarea id="summary" name="summary" rows="3"
                 class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('summary', $post->summary) }}</textarea>
             <div class="mt-1 text-right text-xs text-gray-500">
@@ -56,14 +65,16 @@
             
         </div>
 
-        <div>
-            <label for="admin_comment" class="block text-sm font-medium text-gray-700">
-                ユーザーへのコメント（修正提案時）
-            </label>
-            <textarea id="admin_comment" name="admin_comment" rows="3"
-                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('admin_comment', $post->rejection_reason) }}</textarea>
-            <x-input-error :messages="$errors->get('admin_comment')" class="mt-2" />
-        </div>
+        <label class="mt-3 flex items-center gap-2 text-sm text-gray-700">
+            <input
+                type="checkbox"
+                name="medical_disclaimer"
+                value="1"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                @checked(old('medical_disclaimer', $post->medical_disclaimer))
+            >
+            医療的な内容を含むため、注意書きを表示する
+        </label>
 
         <fieldset>
             <legend class="text-sm font-medium text-gray-700">タグ（公開一覧に反映）</legend>

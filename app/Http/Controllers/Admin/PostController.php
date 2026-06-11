@@ -49,6 +49,7 @@ class PostController extends Controller
 
         $validated = $request->validate([
             'body_published' => ['nullable', 'string', 'max:3000'],
+            'medical_disclaimer' => ['nullable', 'boolean'],
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
@@ -57,6 +58,7 @@ class PostController extends Controller
         $post->update([
             'body_published' => $validated['body_published'],
             'summary' => $validated['summary'] ?? null,
+            'medical_disclaimer' => $request->boolean('medical_disclaimer'),
         ]);
         $post->tags()->sync($validated['tag_ids'] ?? []);
 
@@ -71,7 +73,12 @@ class PostController extends Controller
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'admin_comment' => ['nullable', 'string', 'max:2000'],
+            'medical_disclaimer' => ['nullable', 'boolean'],
         ]);
+
+        if ($post->status !== PostStatus::Suggested) {
+            $post->increment('review_count');
+        }
 
         $post->update([
             'body_published' => $validated['body_published'],
@@ -80,12 +87,13 @@ class PostController extends Controller
             'reviewed_by' => $request->user()->id,
             'reviewed_at' => now(),
             'rejection_reason' => $validated['admin_comment'] ?? null,
+            'medical_disclaimer' => $request->boolean('medical_disclaimer'),
         ]);
 
         $post->tags()->sync($validated['tag_ids'] ?? []);
 
         return redirect()
-            ->route('admin.posts.edit', $post)
+            ->route('admin.posts.index')
             ->with('status', 'suggested');
     }
 
@@ -96,6 +104,7 @@ class PostController extends Controller
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'medical_disclaimer' => ['nullable', 'boolean'],
         ]);
 
         $body = $validated['body_published'];
@@ -110,6 +119,7 @@ class PostController extends Controller
             'reviewed_by' => $request->user()->id,
             'reviewed_at' => now(),
             'rejection_reason' => null,
+            'medical_disclaimer' => $request->boolean('medical_disclaimer'),
         ]);
         $post->tags()->sync($validated['tag_ids'] ?? []);
 

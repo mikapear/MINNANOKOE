@@ -22,6 +22,12 @@
         <p class="mt-4 rounded-md bg-amber-50 p-3 text-sm text-amber-900">投稿を掲載見送りしました。</p>
     @endif
 
+    @if(session('status') === 'suggested')
+        <p class="mt-4 rounded-md bg-blue-50 p-3 text-sm text-blue-900">
+            修正依頼として保存しました。
+        </p>
+    @endif
+
     <ul class="mt-8 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white">
         @foreach($posts as $post)
             <li class="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -41,6 +47,7 @@
                                 @case('pending') bg-yellow-100 text-yellow-800 @break
                                 @case('rejected') bg-red-100 text-red-800 @break
                                 @case('hidden') bg-gray-100 text-gray-700 @break
+                                @case('suggested') bg-blue-100 text-blue-800 @break
                                 @default bg-gray-100 text-gray-700
                             @endswitch
                         ">
@@ -49,10 +56,15 @@
                                 @case('published') 公開中 @break
                                 @case('rejected') 掲載見送り @break
                                 @case('hidden') 非表示 @break
+                                @case('suggested') 修正依頼中 @break
                                 @default 状態不明
                             @endswitch
                         </span>
                        
+                        <span class="ml-2 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+                            レビュー{{ $post->review_count }}回
+                        </span>
+
                         @if($post->user)
                             <div class="mt-2 rounded-md bg-gray-50 p-2 text-xs text-gray-600">
                                 <p>

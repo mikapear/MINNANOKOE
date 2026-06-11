@@ -14,6 +14,22 @@
         <main class="max-w-4xl mx-auto px-4 py-8 pb-32">
             @yield('content')
         </main>
+
+        <footer class="border-t border-gray-200 bg-white py-6">
+            <div class="mx-auto max-w-4xl px-4 text-center text-xs text-gray-500">
+                <a href="{{ route('terms') }}" class="hover:text-indigo-600 hover:underline">
+                    利用規約
+                </a>
+
+                <span class="mx-2">|</span>
+
+                <a href="{{ route('privacy') }}" class="hover:text-indigo-600 hover:underline">
+                    プライバシーポリシー
+                </a>
+            </div>
+        </footer>
+
+
         @include('partials.character')
         @stack('scripts')
     </body>

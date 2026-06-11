@@ -21,6 +21,8 @@ class Post extends Model
         'body_published',
         'summary',
         'status',
+        'review_count',
+        'medical_disclaimer',
         'rejection_reason',
         'reviewed_by',
         'reviewed_at',

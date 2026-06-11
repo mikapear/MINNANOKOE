@@ -28,7 +28,7 @@
         <a href="{{ route('share.create') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
             <div class="space-y-4">
                 <div class="text-lg font-semibold">
-                    物語のシェア
+                    声を投稿する
                 </div>
                 <div class="flex h-40 items-center justify-center">
                     <img
@@ -46,7 +46,7 @@
         <a href="{{ route('stories.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
             <div class="space-y-4">
                 <div class="text-lg font-semibold">
-                    物語を探す
+                    みんなの声を読む
                 </div>
                 <div class="flex h-40 items-center justify-center">
                     <img
@@ -83,9 +83,4 @@
         </a>
     </div>
 
-    <p class="mt-10 text-center text-xs text-gray-500">
-        <a href="{{ route('terms') }}" class="underline">利用規約</a>
-        ・
-        <a href="{{ route('privacy') }}" class="underline">プライバシー</a>
-    </p>
 @endsection

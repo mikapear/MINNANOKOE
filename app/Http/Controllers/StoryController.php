@@ -15,6 +15,12 @@ class StoryController extends Controller
     public function index(Request $request): View
     {
         $q = trim((string) $request->query('q', ''));
+        $sort = $request->query('sort', 'new');
+        $tagIds = collect($request->query('tag_ids', []))
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->values()
+            ->all();
 
         $posts = Post::query()
             ->published()
@@ -26,7 +32,16 @@ class StoryController extends Controller
                         ->orWhere('summary', 'like', $like);
                 });
             })
-            ->latest('published_at')
+            ->when(! empty($tagIds), function ($query) use ($tagIds) {
+                $query->whereHas('tags', function ($q) use ($tagIds) {
+                    $q->whereIn('tags.id', $tagIds);
+                });
+            })
+            
+            
+            ->when($sort === 'old', fn ($query) => $query->oldest('published_at'))
+            ->when($sort === 'likes', fn ($query) => $query->withCount('likes')->orderByDesc('likes_count'))
+            ->when(! in_array($sort, ['old', 'likes'], true), fn ($query) => $query->latest('published_at'))
             ->paginate(15)
             ->withQueryString();
 
@@ -38,7 +53,9 @@ class StoryController extends Controller
             'posts' => $posts,
             'tagGroups' => $tagGroups,
             'searchQuery' => $q,
-            'pageTitle' => '物語を探す',
+            'sort' => $sort,
+            'pageTitle' => 'みんなの声を読む',
+            'tagIds' => $tagIds,
         ]);
     }
 

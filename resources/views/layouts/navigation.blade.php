@@ -13,10 +13,10 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('share.create')" :active="request()->routeIs('share.*')">
-                        物語をシェア
+                        声を投稿する
                     </x-nav-link>
                     <x-nav-link :href="route('stories.index')" :active="request()->routeIs('stories.*')">
-                        物語を探す
+                        みんなの声を読む
                     </x-nav-link>
                     <x-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.*')">
                         学んで安心
@@ -84,7 +84,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('stories.index')" :active="request()->routeIs('stories.*')">
-                物語を探す
+                みんなの声を読む
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('learn.index')" :active="request()->routeIs('learn.*')">
                 学んで安心

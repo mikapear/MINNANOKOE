@@ -1,9 +1,9 @@
 @extends('layouts.site')
 
-@section('title', '物語のシェア | '.config('app.name'))
+@section('title', '声を投稿する | '.config('app.name'))
 
 @section('content')
-    <h1 class="text-2xl font-bold text-gray-900">物語のシェア</h1>
+    <h1 class="text-2xl font-bold text-gray-900">声を投稿する</h1>
     
     <div class="mt-5 rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4 text-indigo-900">
         <p class="text-sm font-semibold">

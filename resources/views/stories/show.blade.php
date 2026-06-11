@@ -5,6 +5,31 @@
 @section('content')
     <article class="prose prose-indigo max-w-none">
         <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-100">
+
+            @if($post->user)
+                @php
+                    $treatmentLabels = config('minnanokoe.treatment_types');
+
+                    $treatments = collect((array) $post->user->treatment_types)
+                        ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
+                        ->implode('・');
+                @endphp
+
+                <div class="mb-4 border-b border-gray-100 pb-3 text-xs text-gray-500">
+                    @if($post->user->birth_date)
+                        現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
+                    @endif
+
+                    @if($post->user->birth_date && $post->user->diagnosed_at)
+                        ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
+                    @endif
+
+                    @if($treatments)
+                        ｜{{ $treatments }}
+                    @endif
+                </div>
+            @endif
+
             <div class="flex items-center gap-2">
                 @if($post->character)
                     <img
@@ -17,33 +42,17 @@
                 <div class="text-gray-900">{{ trim($post->body_published) }}</div>
             </div>
 
-            @if($post->user)
-                @php
-                    $treatmentLabels = config('minnanokoe.treatment_types');
-
-                    $treatments = collect((array) $post->user->treatment_types)
-                        ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
-                        ->implode('・');
-                @endphp
-
-                <p class="mt-4 text-xs text-gray-500">
-                    @if($post->user->birth_date)
-                        現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
-                    @endif
-
-                    @if($post->user->birth_date && $post->user->diagnosed_at)
-                        ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
-                    @endif
-
-                    @if($treatments)
-                        ｜治療: {{ $treatments }}
-                    @endif
-                </p>
+            @if($post->medical_disclaimer)
+                <div class="mt-4 rounded-lg bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">
+                    ※この内容は投稿者個人の体験や意見であり、医療上の助言ではありません。
+                </div>
             @endif
+
+            
 
             @if($post->summary)
                 <aside class="mt-6 border-l-4 border-indigo-200 pl-4 text-sm text-gray-700">
-                    <p class="font-medium text-indigo-900">管理者からのひとこと</p>
+                    <p class="font-medium text-indigo-900">医療者からの補足</p>
                     <p class="mt-1">{{ $post->summary }}</p>
                 </aside>
             @endif

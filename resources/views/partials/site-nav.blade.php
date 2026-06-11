@@ -2,8 +2,9 @@
     <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <a href="{{ route('home') }}" class="text-lg font-semibold text-indigo-700">みんなの声辞典</a>
         <div class="flex flex-wrap items-center gap-3 text-sm">
-            <a href="{{ route('stories.index') }}" class="text-gray-700 hover:text-indigo-600">物語を探す</a>
-            <a href="{{ route('share.create') }}" class="text-gray-700 hover:text-indigo-600">物語のシェア</a>
+            <a href="{{ route('home') }}" class="text-gray-700 hover:text-indigo-600">ホーム</a>
+            <a href="{{ route('stories.index') }}" class="text-gray-700 hover:text-indigo-600">みんなの声を読む</a>
+            <a href="{{ route('share.create') }}" class="text-gray-700 hover:text-indigo-600">声を投稿する</a>
             <a href="{{ route('learn.index') }}" class="text-gray-700 hover:text-indigo-600">学んで安心</a>
             <a href="{{ route('me.posts') }}" class="text-gray-700 hover:text-indigo-600">マイ投稿</a>
             <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-indigo-600">プロフィール編集</a>
