@@ -3,6 +3,7 @@
 @section('title', '管理 | 投稿一覧')
 
 @section('content')
+    @include('admin.partials.nav')
     <h1 class="text-2xl font-bold text-gray-900">投稿の管理</h1>
 
     <form method="get" class="mt-4 flex flex-wrap gap-2 text-sm">
@@ -92,25 +93,6 @@
                                         更新：{{ $post->updated_at->format('Y/m/d H:i') }}
                                     </span>
                                 </p>
-
-                                @if(!$post->user->is_admin && $post->user->is_active)
-                                    <form
-                                        method="POST"
-                                        action="{{ route('admin.users.stop', $post->user) }}"
-                                        class="mt-2"
-                                    >
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <button
-                                            type="submit"
-                                            class="rounded bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
-                                            onclick="return confirm('この投稿者を停止しますか？')"
-                                        >
-                                            この投稿者を停止
-                                        </button>
-                                    </form>
-                                @endif
                             </div>
                         @endif
 
@@ -135,15 +117,50 @@
                                 @endif
 
                                 @if($treatments)
-                                    ｜治療: {{ $treatments }}
+                                    ｜{{ $treatments }}
                                 @endif
 
                             </p>
+                            @if($post->theme)
+                                <div class="mt-1">
+                                    <span class="rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800">
+                                        {{ $post->theme->title }}
+                                    </span>
+                                </div>
+                            @endif
+                            @if($post->body_published)
+                                <p class="mt-3 text-sm text-gray-700 line-clamp-2">
+                                    {{ $post->body_published }}
+                                </p>
+                            @endif
                     
                         @endif
                     </div>
                 </div>
-                <a href="{{ route('admin.posts.edit', $post) }}" class="text-sm font-medium text-indigo-600 hover:underline">確認・編集</a>
+                <div class="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+                    <a href="{{ route('admin.posts.edit', $post) }}"
+                    class="text-sm font-medium text-indigo-600 hover:underline">
+                        確認・編集
+                    </a>
+
+                    @if($post->user && !$post->user->is_admin && $post->user->is_active)
+                        <form
+                            method="POST"
+                            action="{{ route('admin.users.stop', $post->user) }}"
+                        >
+                            @csrf
+                            @method('PATCH')
+
+                            <button
+                                type="submit"
+                                class="rounded bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
+                                onclick="return confirm('この投稿者を停止しますか？')"
+                            >
+                                この投稿者を停止
+                            </button>
+                        </form>
+                    @endif
+            </div>
             </li>
         @endforeach
     </ul>

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\Character;
+use App\Models\Theme;
 
 class Post extends Model
 {
@@ -17,6 +18,7 @@ class Post extends Model
         'user_id',
         'slug',
         'character_id',
+        'theme_id',
         'body_original',
         'body_published',
         'summary',
@@ -74,6 +76,11 @@ class Post extends Model
     public function displayBody(): string
     {
         return $this->body_published ?? '';
+    }
+
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class);
     }
 
     public static function makeUniqueSlug(string $seed, ?int $exceptPostId = null): string

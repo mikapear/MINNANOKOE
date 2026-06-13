@@ -10,18 +10,21 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\Response;
+use App\Models\Theme;
 
 class MyPostController extends Controller
 {
     public function index(Request $request): View
     {
+        $status = $request->query('status');
         $posts = Post::query()
             ->where('user_id', $request->user()->id)
-            ->with(['tags', 'user', 'likes', 'character'])
+            ->with(['tags', 'user', 'likes', 'character', 'theme'])
+            
             ->latest()
             ->paginate(20);
 
-        return view('my-posts.index', compact('posts'));
+        return view('my-posts.index', compact('posts', 'status'));
     }
 
     private function ensureUserCanEdit(Post $post): void
@@ -55,11 +58,19 @@ class MyPostController extends Controller
             ->orderBy('sort_order')
             ->get();
         $characters = Character::where('type', 'story')->get();
+        $themes = Theme::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+        $pastThemes = Theme::where('is_active', false)
+            ->orderByDesc('updated_at')
+            ->get();
 
         return view('my-posts.edit', [
             'post' => $post,
             'tagGroups' => $tagGroups,
             'characters' => $characters,
+            'themes' => $themes,
+            'pastThemes' => $pastThemes,
         ]);
     }
 
@@ -80,6 +91,7 @@ class MyPostController extends Controller
             'body' => ['required', 'string', 'min:10', 'max:3000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'theme_id' => ['nullable', 'integer', 'exists:themes,id'],
             'action' => ['required', 'in:draft,submit'],
             'character_id' => ['required', 'integer', 'exists:characters,id'],
         ]);
@@ -97,6 +109,7 @@ class MyPostController extends Controller
             'reviewed_by' => null,
             'reviewed_at' => null,
             'character_id' => $validated['character_id'],
+            'theme_id' => $validated['theme_id'] ?? null,
         ]);
 
         $post->tags()->sync($validated['tag_ids'] ?? []);

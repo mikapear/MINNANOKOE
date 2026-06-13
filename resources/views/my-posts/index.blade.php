@@ -23,79 +23,75 @@
     </p>
     @endif
 
+<form method="get" class="mt-4 flex flex-wrap gap-2 text-sm">
+    <label>
+        ステータス
+        <select name="status"
+            class="ml-1 rounded border-gray-300 text-sm"
+            onchange="this.form.submit()">
+            <option value="">すべて</option>
+            <option value="draft" @selected(($status ?? '') === 'draft')>下書き</option>
+            <option value="pending" @selected(($status ?? '') === 'pending')>公開準備中</option>
+            <option value="published" @selected(($status ?? '') === 'published')>公開中</option>
+            <option value="suggested" @selected(($status ?? '') === 'suggested')>修正提案あり</option>
+            <option value="rejected" @selected(($status ?? '') === 'rejected')>掲載見送り</option>
+            <option value="hidden" @selected(($status ?? '') === 'hidden')>非表示</option>
+        </select>
+    </label>
+</form>
+
     <ul class="mt-8 space-y-4">
         @foreach($posts as $post)
             <li class="rounded-lg border border-gray-200 bg-white p-4">
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium
-                        @switch($post->status->value)
-                            @case('published') bg-green-100 text-green-800 @break
-                            @case('pending') bg-amber-100 text-amber-900 @break
-                            @case('suggested') bg-amber-100 text-amber-800 @break
-                            @case('rejected') bg-red-100 text-red-800 @break
-                            @default bg-gray-100 text-gray-800
-                        @endswitch
-                    ">
-                        @switch($post->status->value)
-                            @case('published') 公開中 @break
-                            @case('pending') 公開準備中 @break
-                            @case('draft') 下書き @break
-                            @case('suggested') 修正提案あり 
-                            @break
-                            @case('rejected') 掲載見送り @break
-                            @case('hidden') 非表示 @break
-                            @default {{ $post->status->value }}
-                        @endswitch
-                    </span>
-                    <span class="text-xs text-gray-500">{{ $post->updated_at->timezone(config('app.timezone'))->format('Y/m/d H:i') }}</span>
+                     <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium
+                            @switch($post->status->value)
+                                @case('published') bg-green-100 text-green-800 @break
+                                @case('pending') bg-amber-100 text-amber-900 @break
+                                @case('suggested') bg-amber-100 text-amber-800 @break
+                                @case('rejected') bg-red-100 text-red-800 @break
+                                @default bg-gray-100 text-gray-800
+                            @endswitch
+                        ">
+                            @switch($post->status->value)
+                                @case('published') 公開中 @break
+                                @case('pending') 公開準備中 @break
+                                @case('draft') 下書き @break
+                                @case('suggested') 修正提案あり 
+                                @break
+                                @case('rejected') 掲載見送り @break
+                                @case('hidden') 非表示 @break
+                                @default {{ $post->status->value }}
+                            @endswitch
+                        </span>
+                        @if($post->theme)
+                            <span class="inline-flex rounded-full border border-yellow-200 bg-[#fff8df] px-3 py-1 text-xs font-medium text-stone-700">
+                                {{ $post->theme->title }}
+                            </span>
+                        @endif
+                    </div>
+                        <span class="text-xs text-gray-500">{{ $post->updated_at->timezone(config('app.timezone'))->format('Y/m/d H:i') }}</span>
                 </div>
-                <p class="mt-2 text-sm text-gray-800">
-                    <div class="flex items-start gap-3 mt-2">
+                    <div class="flex items-center gap-3 mt-2">
                         @if($post->character)
                             <img
                                 src="{{ asset($post->character->icon_path) }}"
                                 alt="{{ $post->character->name }}"
-                                class="mt-1 h-10 w-10 shrink-0"
+                                class="h-10 w-10 shrink-0"
                             >
                         @endif
-
                         <div class="flex-1">
+
                             <p class="text-sm text-gray-800">
                                 {{ \Illuminate\Support\Str::limit($post->body_original, 120) }}
                             </p>
                         </div>
                     </div>
-                </p>
-
+                
                 <div class="mt-2 text-xs text-pink-600">
                     ♡ {{ $post->likes->count() }}
                 </div>
-
-                @if($post->user)
-                    @php
-                        $treatmentLabels = config('minnanokoe.treatment_types');
-
-                        $treatments = collect((array) $post->user->treatment_types)
-                            ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
-                            ->implode('・');
-                    @endphp
-
-                    <p class="mt-2 text-xs text-gray-500">
-
-                        @if($post->user->birth_date)
-                            現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
-                        @endif
-
-                        @if($post->user->birth_date && $post->user->diagnosed_at)
-                            ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
-                        @endif
-
-                        @if($treatments)
-                            ｜治療: {{ $treatments }}
-                        @endif
-
-                    </p>
-                @endif
 
                 @if($post->tags->isNotEmpty())
                     <div class="mt-2 flex flex-wrap gap-1">

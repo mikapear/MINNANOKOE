@@ -17,9 +17,114 @@
             きれいにまとめなくても大丈夫です。あなたの言葉が、次の誰かの支えになるかもしれません。
         </p>
     </div>
-
     <form method="post" action="{{ route('share.store') }}" class="mt-8 space-y-6">
         @csrf
+
+    @if($themes->isNotEmpty())
+        <div class="mt-6">
+            <p class="text-sm font-medium text-gray-700">
+                今、募集しているテーマ
+            </p>
+
+            <div class="mt-3 flex flex-wrap gap-2">
+                <label class="cursor-pointer">
+                    <input
+                        type="radio"
+                        name="theme_id"
+                        value=""
+                        class="peer sr-only"
+                        @checked(old('theme_id') === '')
+                    >
+
+                    <span class="
+                        inline-flex items-center rounded-full
+                        border border-stone-200/80 bg-white/90
+                        px-4 py-2
+                        text-sm font-medium text-stone-500
+                        transition-all duration-200
+                        hover:border-gray-300 hover:bg-gray-50
+                        peer-checked:border-gray-300
+                        peer-checked:bg-gray-100
+                    ">
+                        テーマなし
+                    </span>
+                </label>
+                @foreach($themes as $theme)
+
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(
+                                old('theme_id') == $theme->id
+                                || request('theme') == $theme->id
+                            )
+                        >                            
+
+                        <span
+                            class="
+                                inline-flex items-center rounded-full
+
+                                border border-stone-200/80
+                                bg-white/90
+
+                                px-4 py-2
+
+                                text-sm font-medium
+                                text-stone-700
+
+                                transition-all duration-200
+
+                                hover:border-yellow-300
+                                hover:bg-[#fff8df]
+
+                                peer-checked:border-yellow-300
+                                peer-checked:bg-[#fff8df]
+                                peer-checked:ring-2
+                                peer-checked:ring-yellow-200
+                            "
+                        >
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    @if(($pastThemes ?? collect())->isNotEmpty())
+        <div class="mt-3">
+            <button
+                type="button"
+                class="text-xs text-gray-500 underline"
+                onclick="document.getElementById('past-themes').classList.toggle('hidden')"
+            >
+                過去のテーマも表示する
+            </button>
+
+            <div id="past-themes" class="mt-3 hidden flex flex-wrap gap-2">
+                @foreach($pastThemes as $theme)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id') == $theme->id || request('theme') == $theme->id)
+                        >
+
+                        <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 transition-all duration-200 hover:border-yellow-300 hover:bg-[#fff8df] peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
         <div>
             <label for="body" class="block text-sm font-medium text-gray-700">あなたの体験・工夫・いま思うこと</label>
 
@@ -71,7 +176,7 @@
 
         <fieldset>
             <legend class="text-sm font-medium text-gray-700">
-                タグ（任意・複数選択）
+                タグ（複数選択可）
             </legend>
 
             @php
@@ -79,38 +184,27 @@
             @endphp
 
             <div class="mt-4 space-y-5">
-
                 @foreach($tagGroups as $group)
-
-                    <div class="rounded-lg border border-gray-200 bg-white p-4">
-
-                        <h3 class="mb-3 text-sm font-semibold text-gray-800">
+                    <details open class="rounded-lg border border-gray-200 bg-white p-4">
+                        <summary class="cursor-pointer text-sm font-semibold text-gray-800">
                             {{ $group->name }}
-                        </h3>
+                        </summary>
 
-                        <div class="flex flex-wrap gap-2">
-
+                        <div class="mt-3 flex flex-wrap gap-2">
                             @foreach($group->tags as $tag)
-
                                 <x-tag-checkbox
                                     :tag="$tag"
                                     :checked="$selected->contains($tag->id)"
                                 />
-
                             @endforeach
-
                         </div>
-
-                    </div>
-
+                    </details>
                 @endforeach
-
             </div>
-
         </fieldset>
 
         <p class="mt-2 text-sm text-gray-600">
-            ※投稿は管理者の確認後に公開されます。個人が特定される情報は書かないでください。
+            ※投稿は管理者の確認後に公開されます。個人が特定される情報は書かないようお願いします。
         </p>
 
         <div class="flex gap-3">

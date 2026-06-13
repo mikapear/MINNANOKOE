@@ -30,6 +30,15 @@
                 </div>
             @endif
 
+            @if($post->theme)
+                <div class="mb-4">
+                    <a href="{{ route('stories.index', ['theme_id' => $post->theme->id]) }}"
+                       class="inline-flex rounded-full border border-yellow-200 bg-[#fff8df] px-3 py-1 text-xs font-medium text-stone-700 hover:border-yellow-300 hover:bg-yellow-50">
+                        {{ $post->theme->title }}
+                    </a>
+                </div>
+            @endif
+            
             <div class="flex items-center gap-2">
                 @if($post->character)
                     <img

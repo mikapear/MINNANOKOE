@@ -9,6 +9,7 @@ use App\Models\TagGroup;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Models\Theme;
 
 class StoryController extends Controller
 {
@@ -16,6 +17,13 @@ class StoryController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
         $sort = $request->query('sort', 'new');
+        $themes = Theme::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+        $pastThemes = Theme::where('is_active', false)
+            ->orderByDesc('updated_at')
+            ->get();
+        $activeThemeId = $request->query('theme_id');
         $tagIds = collect($request->query('tag_ids', []))
             ->map(fn ($id) => (int) $id)
             ->filter()
@@ -24,7 +32,10 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'character', 'user'])
+            ->with(['tags', 'character', 'user', 'theme'])
+            ->when($activeThemeId, function ($query) use ($activeThemeId) {
+                $query->where('theme_id', $activeThemeId);
+            })
             ->when($q !== '', function ($query) use ($q) {
                 $like = '%'.addcslashes($q, '%_\\').'%';
                 $query->where(function ($qry) use ($like) {
@@ -56,6 +67,9 @@ class StoryController extends Controller
             'sort' => $sort,
             'pageTitle' => 'みんなの声を読む',
             'tagIds' => $tagIds,
+            'themes' => $themes,
+            'pastThemes' => $pastThemes,
+            'activeThemeId' => $activeThemeId,
         ]);
     }
 
@@ -118,7 +132,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'character', 'user'])
+            ->with(['tags', 'character', 'user', 'theme'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
@@ -133,6 +147,13 @@ class StoryController extends Controller
             'searchQuery' => '',
             'pageTitle' => 'タグ: '.$tag->name,
             'activeTag' => $tag,
+
+            'themes' => Theme::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get(),
+            'activeThemeId' => null,
+            'sort' => 'new',
+            'tagIds' => [],
         ]);
     }
 
@@ -141,7 +162,7 @@ class StoryController extends Controller
         $post = Post::query()
             ->published()
             ->where('slug', $slug)
-            ->with(['tags', 'user', 'character', 'likes'])
+            ->with(['tags', 'user', 'character', 'likes', 'theme'])
             ->firstOrFail();
 
         $tagIds = $post->tags->pluck('id');
@@ -172,7 +193,7 @@ class StoryController extends Controller
 
         $posts = Post::query()
             ->published()
-            ->with(['tags', 'user', 'character'])
+            ->with(['tags', 'user', 'character', 'theme'])
             ->whereHas('tags', fn ($q) => $q->where('tags.id', $tag->id))
             ->latest('published_at')
             ->paginate(15);
@@ -184,6 +205,13 @@ class StoryController extends Controller
             'searchQuery' => '',
             'pageTitle' => $label.' · '.$tag->name,
             'activeTag' => $tag,
+
+            'themes' => Theme::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get(),
+            'activeThemeId' => null,
+            'sort' => 'new',
+            'tagIds' => [],
         ]);
     }
 }

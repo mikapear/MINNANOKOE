@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\TagGroup;
+use App\Models\Theme;
 
 class PostController extends Controller
 {
@@ -17,7 +18,7 @@ class PostController extends Controller
         $status = $request->query('status');
 
         $posts = Post::query()
-            ->with(['user', 'tags'])
+            ->with(['user', 'tags', 'theme', 'character'])
             ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()
             ->paginate(25)
@@ -28,11 +29,18 @@ class PostController extends Controller
 
     public function edit(Post $post): View
     {
+        $post->load(['theme', 'tags', 'user', 'character']);
         $tagGroups = TagGroup::with('tags')
             ->orderBy('sort_order')
             ->get();
+        $themes = Theme::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+        $pastThemes = Theme::where('is_active', false)
+            ->orderByDesc('updated_at')
+            ->get();
 
-        return view('admin.posts.edit', compact('post', 'tagGroups'));
+        return view('admin.posts.edit', compact('post', 'tagGroups', 'themes', 'pastThemes'));
     }
 
     public function update(Request $request, Post $post): RedirectResponse
@@ -53,12 +61,16 @@ class PostController extends Controller
             'summary' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'theme_id' => ['nullable', 'integer', 'exists:themes,id'],
         ]);
 
         $post->update([
             'body_published' => $validated['body_published'],
             'summary' => $validated['summary'] ?? null,
             'medical_disclaimer' => $request->boolean('medical_disclaimer'),
+            'theme_id' => $request->has('theme_id')
+                ? ($validated['theme_id'] ?? null)
+                : $post->theme_id,
         ]);
         $post->tags()->sync($validated['tag_ids'] ?? []);
 
@@ -74,6 +86,7 @@ class PostController extends Controller
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'admin_comment' => ['nullable', 'string', 'max:2000'],
             'medical_disclaimer' => ['nullable', 'boolean'],
+            'theme_id' => ['nullable', 'integer', 'exists:themes,id'],
         ]);
 
         if ($post->status !== PostStatus::Suggested) {
@@ -88,6 +101,9 @@ class PostController extends Controller
             'reviewed_at' => now(),
             'rejection_reason' => $validated['admin_comment'] ?? null,
             'medical_disclaimer' => $request->boolean('medical_disclaimer'),
+            'theme_id' => $request->has('theme_id')
+                ? ($validated['theme_id'] ?? null)
+                : $post->theme_id,
         ]);
 
         $post->tags()->sync($validated['tag_ids'] ?? []);
@@ -105,8 +121,8 @@ class PostController extends Controller
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'medical_disclaimer' => ['nullable', 'boolean'],
-        ]);
-
+            'theme_id' => ['nullable', 'integer', 'exists:themes,id'],
+    ]);
         $body = $validated['body_published'];
         $slug = $post->slug ?? Post::makeUniqueSlug($body, $post->id);
 
@@ -120,6 +136,9 @@ class PostController extends Controller
             'reviewed_at' => now(),
             'rejection_reason' => null,
             'medical_disclaimer' => $request->boolean('medical_disclaimer'),
+            'theme_id' => $validated['theme_id'] ?? null
+                ? ($validated['theme_id'] ?? null)
+                : $post->theme_id,
         ]);
         $post->tags()->sync($validated['tag_ids'] ?? []);
 

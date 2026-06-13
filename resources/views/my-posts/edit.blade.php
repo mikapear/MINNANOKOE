@@ -29,9 +29,96 @@
 
 @endif
 
+
     <form method="post" action="{{ route('me.posts.update', $post) }}" class="mt-8 space-y-6">
         @csrf
         @method('patch')
+
+        @if($themes->isNotEmpty())
+            <div class="mt-6">
+            <p class="text-sm font-medium text-gray-700">
+                今、募集しているテーマ（任意）
+            </p>
+
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach($themes as $theme)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value=""
+                            class="peer sr-only"
+                            @checked(old('theme_id', $post->theme_id) === null)
+                        >
+
+                        <span class="
+                            inline-flex items-center rounded-full
+                            border border-stone-200/80 bg-white/90
+                            px-4 py-2
+                            text-sm font-medium text-stone-500
+                            transition-all duration-200
+                            hover:border-gray-300
+                            peer-checked:border-gray-300
+                            peer-checked:bg-gray-100
+                        ">
+                            テーマなし
+                        </span>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id', $post->theme_id) == $theme->id)
+                        >
+
+                        <span class="
+                            inline-flex items-center rounded-full
+                            border border-stone-200/80 bg-white/90
+                            px-4 py-2
+                            text-sm font-medium text-stone-700
+                            transition-all duration-200
+                            hover:border-yellow-300 hover:bg-[#fff8df]
+                            peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800
+                        ">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    @if(($pastThemes ?? collect())->isNotEmpty())
+        <div class="mt-3">
+            <button
+                type="button"
+                class="text-xs text-gray-500 underline"
+                onclick="document.getElementById('past-themes').classList.toggle('hidden')"
+            >
+                過去のテーマも表示する
+            </button>
+
+            <div id="past-themes" class="mt-3 hidden flex flex-wrap gap-2">
+                @foreach($pastThemes as $theme)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id') == $theme->id || request('theme') == $theme->id)
+                        >
+
+                        <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 transition-all duration-200 hover:border-yellow-300 hover:bg-[#fff8df] peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
         <div>
             <label for="body" class="block text-sm font-medium text-gray-700">
@@ -93,7 +180,7 @@
                             @checked($selectedCharacterId == $character->id)
                         >
 
-                        <div class="rounded-2xl border border-gray-200 bg-white p-3 text-center shadow-sm transition hover:bg-yellow-50 peer-checked:border-yellow-300 peer-checked:bg-yellow-50 peer-checked:ring-2 peer-checked:ring-yellow-200">
+                        <div class="rounded-2xl border border-gray-200 bg-white p-3 text-center shadow-sm transition hover:bg-yellow-50 peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800">
                             <img
                                 src="{{ asset($character->icon_path) }}"
                                 alt="{{ $character->name }}"
@@ -110,6 +197,7 @@
 
             <x-input-error :messages="$errors->get('character_id')" class="mt-2" />
         </div>
+               
         <fieldset>
             <legend class="text-sm font-medium text-gray-700">
                 タグ
@@ -121,12 +209,12 @@
 
             <div class="mt-4 space-y-5">
                 @foreach($tagGroups as $group)
-                    <div class="rounded-lg border border-gray-200 bg-white p-4">
-                        <h3 class="mb-3 text-sm font-semibold text-gray-800">
+                    <details open class="rounded-lg border border-gray-200 bg-white p-4">
+                        <summary class="cursor-pointer text-sm font-semibold text-gray-800">
                             {{ $group->name }}
-                        </h3>
+                        </summary>
 
-                        <div class="flex flex-wrap gap-2">
+                        <div class="mt-3 flex flex-wrap gap-2">
                             @foreach($group->tags as $tag)
                                 <x-tag-checkbox
                                     :tag="$tag"
@@ -134,11 +222,10 @@
                                 />
                             @endforeach
                         </div>
-                    </div>
+                    </details>
                 @endforeach
             </div>
         </fieldset>
-
     <div class="flex gap-3">        
         <button
             type="submit"
@@ -148,7 +235,6 @@
         >
             下書き保存
         </button>
-
 
         <button 
             type="submit" 

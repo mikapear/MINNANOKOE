@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Post;
 
 class Theme extends Model
 {
@@ -14,4 +15,9 @@ class Theme extends Model
         'ends_at',
         'sort_order',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

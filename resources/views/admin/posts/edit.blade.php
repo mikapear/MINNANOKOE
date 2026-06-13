@@ -3,6 +3,7 @@
 @section('title', '管理 | 投稿 #'.$post->id)
 
 @section('content')
+    @include('admin.partials.nav')
     <h1 class="text-2xl font-bold text-gray-900">投稿の確認・編集</h1>
 
     @if(session('status') === 'saved')
@@ -38,6 +39,76 @@
 
     <form id="admin-post-form" method="post" action="{{ route('admin.posts.update', $post) }}" class="mt-8 space-y-6">
         @csrf
+
+        @if($themes->isNotEmpty())
+            <fieldset class="mt-6">
+            <legend class="text-sm font-medium text-gray-700">
+                募集中テーマ
+            </legend>
+
+            <div class="mt-3 flex flex-wrap gap-2">
+                <label class="cursor-pointer">
+                    <input
+                        type="radio"
+                        name="theme_id"
+                        value=""
+                        class="peer sr-only"
+                        @checked(old('theme_id', $post->theme_id) === null)
+                    >
+
+                    <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-500 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 peer-checked:border-gray-300 peer-checked:bg-gray-100">
+                        テーマなし
+                    </span>
+                </label>
+
+                @foreach($themes as $theme)
+                   <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id', $post->theme_id) == $theme->id)
+                        >
+
+                        <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 transition-all duration-200 hover:border-yellow-300 hover:bg-[#fff8df] peer-checked:border-yellow-300 peer-checked:bg-[#fff8df] peer-checked:ring-2 peer-checked:ring-yellow-200">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </fieldset>
+    @endif
+
+    @if(($pastThemes ?? collect())->isNotEmpty())
+        <div class="mt-3">
+            <button
+                type="button"
+                class="text-xs text-gray-500 underline"
+                onclick="document.getElementById('past-themes').classList.toggle('hidden')"
+            >
+                過去のテーマも表示する
+            </button>
+
+            <div id="past-themes" class="mt-3 hidden flex flex-wrap gap-2">
+                @foreach($pastThemes as $theme)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id') == $theme->id || request('theme') == $theme->id)
+                        >
+
+                        <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 transition-all duration-200 hover:border-yellow-300 hover:bg-[#fff8df] peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
         <div>
             <label for="body_published" class="block text-sm font-medium text-gray-700">公開用本文（編集・伏せ字後）</label>
@@ -83,23 +154,23 @@
 
             <div class="mt-4 space-y-5">
                 @foreach($tagGroups as $group)
-                    <div class="rounded-lg border border-gray-200 bg-white p-4">
-                        <h3 class="mb-3 text-sm font-semibold text-gray-800">
+                    <details open class="rounded-lg border border-gray-200 bg-white p-4">
+                        <summary class="cursor-pointer text-sm font-semibold text-gray-800">
                             {{ $group->name }}
-                        </h3>
+                        </summary>
 
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($group->tags as $tag)
-                            <x-tag-checkbox
-                                :tag="$tag"
-                                :checked="$sel->contains($tag->id)"
-                            />
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </fieldset>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            @foreach($group->tags as $tag)
+                                <x-tag-checkbox
+                                    :tag="$tag"
+                                    :checked="$sel->contains($tag->id)"
+                                />
+                            @endforeach
+                        </div>
+                    </details>
+                @endforeach
+            </div>
+        </fieldset>
 
         <div class="flex flex-wrap gap-3">
             <button type="submit" name="action" value="save" class="rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white hover:bg-gray-900">

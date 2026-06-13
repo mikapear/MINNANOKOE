@@ -8,7 +8,6 @@
             <img src="{{ asset('logo.png') }}" alt="ロゴ" class="h-40 w-auto object-contain sm:h-64"/>
         </div>
         <p class="text-lg text-indigo-900 font-medium">あなたの日常、あなたの声</p>
-        <p class="text-sm text-gray-600">プロジェクト <span class="font-semibold">Survivor+</span></p>
         <div class="mx-auto max-w-2xl space-y-3 text-center">
             <p class="text-lg font-medium leading-relaxed text-indigo-900 sm:text-lg">
                 不安だったこと、
@@ -23,6 +22,23 @@
             </p>
         </div>
     </div>
+
+    @if($themes->isNotEmpty())
+        <div class="mt-10 rounded-2xl text-center">
+            <p class="text-sm font-semibold text-indigo-900">
+                今、募集しているテーマ
+            </p>
+
+            <div class="mt-3 flex flex-wrap justify-center gap-2">
+                @foreach($themes as $theme)
+                    <a href="{{ route('share.create') }}?theme={{ $theme->id }}" 
+                        class="rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition-all duration-200 hover:border-yellow-300 hover:bg-yellow-50 hover:shadow">
+                            {{ $theme->title }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     <div class="mt-12 grid gap-4 sm:grid-cols-3">
         <a href="{{ route('share.create') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">

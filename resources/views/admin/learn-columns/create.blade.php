@@ -3,6 +3,7 @@
 @section('title', 'コラム作成 | '.config('app.name'))
 
 @section('content')
+    @include('admin.partials.nav')
     <h1 class="text-2xl font-bold text-gray-900">
         コラム作成
     </h1>

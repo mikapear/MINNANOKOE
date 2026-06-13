@@ -35,6 +35,76 @@
         </button>
     </form>
 
+    @if(($themes ?? collect())->isNotEmpty())
+        <div class="mt-5">
+            <p class="text-sm font-medium text-gray-700">
+                テーマから探す
+            </p>
+
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach($themes as $theme)
+
+                    @php
+                        $isActive = (string)($activeThemeId ?? '') === (string)$theme->id;
+                    @endphp
+                    @php
+                        $params = request()->except(['page', 'theme_id']);
+
+                        if (! $isActive) {
+                            $params['theme_id'] = $theme->id;
+                        }
+                    @endphp
+
+                    <a
+                        href="{{ route('stories.index', $params) }}"
+                    
+                        class="
+                            rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200
+                            {{ $isActive
+                                ? 'border-yellow-300 bg-[#fff8df] text-stone-800 ring-2 ring-yellow-200'
+                                : 'border-stone-200/80 bg-white/90 text-stone-700 hover:border-yellow-300 hover:bg-[#fff8df]'
+                            }}
+                        "
+                    >
+                        {{ $theme->title }}
+                    </a>
+
+                @endforeach
+
+            </div>
+        </div>
+    @endif
+
+    @if(($pastThemes ?? collect())->isNotEmpty())
+        <div class="mt-3">
+            <button
+                type="button"
+                class="text-xs text-gray-500 underline"
+                onclick="document.getElementById('past-themes').classList.toggle('hidden')"
+            >
+                過去のテーマも表示する
+            </button>
+
+            <div id="past-themes" class="mt-3 hidden flex flex-wrap gap-2">
+                @foreach($pastThemes as $theme)
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="theme_id"
+                            value="{{ $theme->id }}"
+                            class="peer sr-only"
+                            @checked(old('theme_id') == $theme->id || request('theme') == $theme->id)
+                        >
+
+                        <span class="inline-flex items-center rounded-full border border-stone-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-stone-700 transition-all duration-200 hover:border-yellow-300 hover:bg-[#fff8df] peer-checked:border-yellow-200 peer-checked:bg-[#fff8df] peer-checked:text-stone-800">
+                            {{ $theme->title }}
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     @include('partials.tag-filter', [
         'tagGroups' => $tagGroups,
         'activeTag' => $activeTag ?? null,
@@ -85,6 +155,14 @@
                     <p class="mb-4 text-xs text-gray-500">
                         {{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}
                     </p>
+                @endif
+
+                @if($post->theme)
+                    <div class="mb-3">
+                        <span class="inline-flex rounded-full border border-yellow-200 bg-[#fff8df] px-3 py-1 text-xs font-medium text-stone-700">
+                            {{ $post->theme->title }}
+                        </span>
+                    </div>
                 @endif
 
                 <div class="flex items-start gap-3">

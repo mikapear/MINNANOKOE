@@ -3,6 +3,7 @@
 @section('title', 'タグ管理 | '.config('app.name'))
 
 @section('content')
+    @include('admin.partials.nav')
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-900">タグ管理</h1>
 

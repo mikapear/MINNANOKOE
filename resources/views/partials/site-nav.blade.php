@@ -11,12 +11,7 @@
             
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.posts.index') }}" class="text-amber-700 font-medium">投稿管理</a>
-                    <a href="{{ route('admin.tags.index') }}"class="text-amber-700 font-medium hover:text-amber-800">タグ管理</a>
-                    <a href="{{ route('admin.learn-columns.index') }}"class="text-amber-700 font-medium hover:text-amber-800">コラム管理</a>
-                    <a href="{{ route('admin.learn-sections.index') }}"class="text-amber-700 font-medium hover:text-amber-800">学びカテゴリ管理</a>
-                    <a href="{{ route('admin.users.index') }}" class="text-amber-700 font-medium hover:text-amber-800">ユーザー管理</a>
-
+                    <a href="{{ route('admin.posts.index') }}" class="text-amber-700 font-medium">管理</a>
                 @endif
 
                 <span class="text-gray-400">|</span>

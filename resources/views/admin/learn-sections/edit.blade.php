@@ -3,6 +3,7 @@
 @section('title', '学びカテゴリ編集 | '.config('app.name'))
 
 @section('content')
+    @include('admin.partials.nav')
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-900">
             学びカテゴリ編集

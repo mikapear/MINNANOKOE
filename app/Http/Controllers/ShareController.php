@@ -9,6 +9,7 @@ use App\Models\Character;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\Theme;
 
 class ShareController extends Controller
 {
@@ -24,8 +25,14 @@ class ShareController extends Controller
             ->get();
         $characters = Character::where('type', 'story')
             ->get();
+        $themes = Theme::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+        $pastThemes = Theme::where('is_active', false)
+            ->orderByDesc('updated_at')
+            ->get();
 
-        return view('share.create', compact('tagGroups', 'characters'));
+        return view('share.create', compact('tagGroups', 'characters', 'themes', 'pastThemes'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -42,6 +49,7 @@ class ShareController extends Controller
             'tag_ids.*' => ['integer', 'exists:tags,id'],
             'action' => ['required', 'in:draft,submit'],
             'character_id' => ['nullable', 'integer', 'exists:characters,id'],
+            'theme_id' => ['nullable', 'integer', 'exists:themes,id'],
         ]);
 
         $status = $validated['action'] === 'draft'
@@ -51,6 +59,7 @@ class ShareController extends Controller
         $post = Post::query()->create([
             'user_id' => $request->user()->id,
             'character_id' => $validated['character_id'] ?? null,
+            'theme_id' => $validated['theme_id'] ?? null,
             'body_original' => $validated['body'],
             'status' => $status,
         ]);

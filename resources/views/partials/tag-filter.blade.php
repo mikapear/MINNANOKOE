@@ -5,7 +5,8 @@
 
     <input type="hidden" name="q" value="{{ $searchQuery ?? '' }}">
     <input type="hidden" name="sort" value="{{ $sort ?? 'new' }}">
-
+    <input type="hidden" name="theme_id" value="{{ $activeThemeId ?? request('theme_id') }}">
+    
     <div class="mt-4 space-y-5">
         @foreach($tagGroups as $group)
             <details open class="rounded-lg border border-gray-200 bg-white p-4">

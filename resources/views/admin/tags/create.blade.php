@@ -3,6 +3,7 @@
 @section('title', 'タグ作成 | '.config('app.name'))
 
 @section('content')
+    @include('admin.partials.nav')
     <h1 class="text-2xl font-bold text-gray-900">
         タグ作成
     </h1>

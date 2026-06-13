@@ -10,7 +10,7 @@
 
             <div class="mb-4">
                 <label class="block font-medium mb-2">
-                    タイトル
+                    テーマ名
                 </label>
 
                 <input
@@ -24,7 +24,7 @@
 
             <div class="mb-4">
                 <label class="block font-medium mb-2">
-                    説明
+                    テーマの説明（任意）
                 </label>
 
                 <textarea

@@ -1,4 +1,11 @@
-<x-app-layout>
+@extends('layouts.site')
+
+@section('title', '管理 | 募集中テーマ')
+
+@section('content')
+
+    @include('admin.partials.nav')
+    
     <div class="max-w-5xl mx-auto py-8">
 
         <div class="flex justify-between items-center mb-6">
@@ -31,6 +38,10 @@
                             <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                                 募集中
                             </span>
+                        @else
+                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">
+                                停止中
+                            </span>
                         @endif
 
                         <a href="{{ route('admin.themes.edit', $theme) }}"
@@ -55,4 +66,4 @@
         @endforeach
 
     </div>
-</x-app-layout>
+@endsection
