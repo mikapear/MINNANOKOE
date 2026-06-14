@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 flex flex-col">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -28,9 +28,14 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-1">
                 {{ $slot }}
             </main>
+            <footer class="bg-white border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+                <a href="{{ route('terms') }}" class="hover:text-gray-700">利用規約</a>
+                <span class="mx-2">|</span>
+                <a href="{{ route('privacy') }}" class="hover:text-gray-700">プライバシーポリシー</a>
+            </footer>
         </div>
     </body>
 </html>

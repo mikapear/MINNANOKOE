@@ -10,25 +10,29 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-slate-50 text-gray-900">
-        @include('partials.site-nav')
-        <main class="max-w-4xl mx-auto px-4 py-8 pb-32">
-            @yield('content')
-        </main>
+        <div class="min-h-screen flex flex-col">
 
-        <footer class="border-t border-gray-200 bg-white py-6">
-            <div class="mx-auto max-w-4xl px-4 text-center text-xs text-gray-500">
-                <a href="{{ route('terms') }}" class="hover:text-indigo-600 hover:underline">
+            @include('partials.site-nav')
+
+            <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+                @yield('content')
+            </main>
+
+            <footer class="border-t border-gray-200 bg-white py-6">
+                <div class="mx-auto max-w-4xl px-4 text-center text-xs  text-gray-500">
+                    <a href="{{ route('terms') }}" class="hover:text-indigo-600 hover:underline">
                     利用規約
-                </a>
+                    </a>
 
-                <span class="mx-2">|</span>
+                    <span class="mx-2">|</span>
 
-                <a href="{{ route('privacy') }}" class="hover:text-indigo-600 hover:underline">
-                    プライバシーポリシー
-                </a>
-            </div>
-        </footer>
+                    <a href="{{ route('privacy') }}" class="hover:text-indigo-600 hover:underline">
+                        プライバシーポリシー
+                    </a>
+                </div>
+            </footer>
 
+        </div>
 
         @include('partials.character')
         @stack('scripts')
