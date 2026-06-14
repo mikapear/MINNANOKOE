@@ -1,6 +1,17 @@
-<x-app-layout>
-    <div class="max-w-3xl mx-auto py-8">
+@extends('layouts.site')
 
+@section('title', '管理 | テーマ作成')
+
+@section('content')
+
+@include('admin.partials.nav')
+<a href="{{ route('admin.themes.index') }}"
+   class="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 mb-4">
+    <span>←</span>
+    <span>テーマ一覧へ戻る</span>
+</a>
+
+<div class="bg-white rounded-xl shadow p-6">
         <h1 class="text-2xl font-bold mb-6">
             テーマ作成
         </h1>
@@ -65,4 +76,5 @@
         </form>
 
     </div>
-</x-app-layout>
+</div>
+@endsection
