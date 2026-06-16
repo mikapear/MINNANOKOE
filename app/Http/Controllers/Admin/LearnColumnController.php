@@ -42,7 +42,9 @@ class LearnColumnController extends Controller
             'learn_section_id' => ['required', 'integer', 'exists:learn_sections,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:learn_columns,slug'],
-            'body' => ['required', 'string'],
+            'blocks' => ['required', 'array', 'min:1'],
+            'blocks.*.subtitle' => ['nullable', 'string', 'max:255'],
+            'blocks.*.body' => ['nullable', 'string'],
             'is_published' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer'],
             'tag_ids' => ['nullable', 'array'],
@@ -50,18 +52,35 @@ class LearnColumnController extends Controller
             'character_id' => ['nullable', 'integer', 'exists:characters,id'],
         ]);
 
+        $blocks = collect($validated['blocks'])
+            ->filter(function ($block) {
+                return filled($block['subtitle'] ?? null) || filled($block['body'] ?? null);
+            })
+            ->values();
+
         $column = LearnColumn::create([
             'learn_section_id' => $validated['learn_section_id'],
             'title' => $validated['title'],
             'slug' => $validated['slug'] ?: 'column-' . uniqid(),
-            'body' => $validated['body'],
+            'body' => $blocks
+                    ->pluck('body')
+                    ->filter()
+                    ->implode("\n\n"),
             'character_id' => $validated['character_id'] ?? null,
             'is_published' => $request->boolean('is_published'),
             'sort_order' => $validated['sort_order'] ?? 0,
         ]);
 
-        $column->tags()->sync($validated['tag_ids'] ?? []);
+        
+        foreach ($blocks as $index => $block) {
+            $column->blocks()->create([
+                'subtitle' => $block['subtitle'] ?? null,
+                'body' => $block['body'] ?? null,
+                'sort_order' => $index,
+            ]);
+        }
 
+        $column->tags()->sync($validated['tag_ids'] ?? []);
         return redirect()
             ->route('admin.learn-columns.index')
             ->with('status', 'created');
@@ -74,6 +93,7 @@ class LearnColumnController extends Controller
         $characters = Character::query()
             ->orderBy('id')
             ->get();
+        $learnColumn->load('blocks');
 
         return view('admin.learn-columns.edit', compact('learnColumn', 'sections', 'tagGroups', 'characters'));
     }
@@ -84,7 +104,9 @@ class LearnColumnController extends Controller
             'learn_section_id' => ['required', 'integer', 'exists:learn_sections,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:learn_columns,slug,' . $learnColumn->id],
-            'body' => ['required', 'string'],
+            'blocks' => ['required', 'array', 'min:1'],
+            'blocks.*.subtitle' => ['nullable', 'string', 'max:255'],
+            'blocks.*.body' => ['nullable', 'string'],
             'is_published' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer'],
             'tag_ids' => ['nullable', 'array'],
@@ -92,15 +114,34 @@ class LearnColumnController extends Controller
             'character_id' => ['nullable', 'integer', 'exists:characters,id'],
         ]);
 
+        $blocks = collect($validated['blocks'])
+            ->filter(function ($block) {
+                return filled($block['subtitle'] ?? null) || filled($block['body'] ?? null);
+            })
+            ->values();
+
         $learnColumn->update([
             'learn_section_id' => $validated['learn_section_id'],
             'title' => $validated['title'],
             'slug' => $validated['slug'] ?: $learnColumn->slug,
-            'body' => $validated['body'],
+            'body' => $blocks
+                ->pluck('body')
+                ->filter()
+                ->implode("\n\n"),
             'character_id' => $validated['character_id'] ?? null,
             'is_published' => $request->boolean('is_published'),
             'sort_order' => $validated['sort_order'] ?? 0,
         ]);
+
+        $learnColumn->blocks()->delete();
+
+        foreach ($blocks as $index => $block) {
+            $learnColumn->blocks()->create([
+                'subtitle' => $block['subtitle'] ?? null,
+                'body' => $block['body'] ?? null,
+                'sort_order' => $index,
+            ]);
+        }
 
         $learnColumn->tags()->sync($validated['tag_ids'] ?? []);
 

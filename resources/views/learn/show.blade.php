@@ -26,7 +26,7 @@
         @else
             <h1 class="text-2xl font-bold text-gray-900">
                 {{ $column->title }}
-        </h1>
+            </h1>
         @endif
 
         <x-like-button
@@ -36,7 +36,25 @@
         />
 
         <div class="prose prose-indigo mt-6 max-w-none text-gray-800">
-            {!! $column->body !!}
+            @if($column->blocks->isNotEmpty())
+                @foreach($column->blocks as $block)
+                    <section class="mt-8 first:mt-0">
+                        @if($block->subtitle)
+                            <h2 class="text-xl font-bold text-gray-900">
+                                {{ $block->subtitle }}
+                            </h2>
+                        @endif
+
+                        @if($block->body)
+                            <div class="mt-3 leading-relaxed">
+                                {!! nl2br(e($block->body)) !!}
+                            </div>
+                        @endif
+                    </section>
+                @endforeach
+            @else
+                {!! $column->body !!}
+            @endif
         </div>
         @if($column->tags->isNotEmpty())
             <div class="mt-6 flex flex-wrap gap-2">

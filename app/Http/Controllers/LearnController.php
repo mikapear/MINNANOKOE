@@ -19,7 +19,11 @@ class LearnController extends Controller
     public function section(string $sectionSlug): View
     {
         $section = LearnSection::query()->where('slug', $sectionSlug)->firstOrFail();
-        $columns = $section->columns()->where('is_published', true)->orderBy('sort_order')->get();
+
+        $columns = $section->columns()
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->get();
 
         return view('learn.section', compact('section', 'columns'));
     }
@@ -27,11 +31,12 @@ class LearnController extends Controller
     public function show(string $sectionSlug, string $columnSlug): View
     {
         $section = LearnSection::query()->where('slug', $sectionSlug)->firstOrFail();
+
         $column = LearnColumn::query()
             ->where('learn_section_id', $section->id)
             ->where('slug', $columnSlug)
             ->where('is_published', true)
-            ->with(['section', 'tags','character','likes'])
+            ->with(['section', 'tags', 'character', 'likes', 'blocks'])
             ->firstOrFail();
 
         $tagIds = $column->tags->pluck('id');

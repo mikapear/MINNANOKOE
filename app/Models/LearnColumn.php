@@ -49,4 +49,9 @@ class LearnColumn extends Model
         return $this->morphMany(Like::class, 'likeable');
     }
 
+    public function blocks()
+    {
+        return $this->hasMany(LearnColumnBlock::class)->orderBy('sort_order');
+    }
+
 }

@@ -103,17 +103,80 @@
         </div>
 
         <div>
-            <label for="body" class="block text-sm font-medium text-gray-700">
-                本文
-            </label>
-
-            <textarea
-                id="body"
-                name="body"
-                rows="16"
-                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            >{{ old('body', $learnColumn->body) }}</textarea>
+    <div class="mb-3 flex items-center justify-between">
+        <div>
+            <h2 class="text-sm font-medium text-gray-700">
+                本文ブロック
+            </h2>
+            <p class="mt-1 text-xs text-gray-500">
+                サブタイトルと本文を組み合わせて、記事を編集できます。
+            </p>
         </div>
+
+        <button
+            type="button"
+            id="add-block"
+            class="rounded-md border border-indigo-200 bg-white px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
+        >
+            ＋ ブロックを追加
+        </button>
+    </div>
+
+    <div id="blocks" class="space-y-4">
+        @php
+            $oldBlocks = old('blocks', $learnColumn->blocks->map(fn ($block) => [
+                'subtitle' => $block->subtitle,
+                'body' => $block->body,
+            ])->values()->all());
+
+            if (empty($oldBlocks)) {
+                $oldBlocks = [['subtitle' => '', 'body' => $learnColumn->body]];
+            }
+        @endphp
+
+        @foreach($oldBlocks as $index => $block)
+            <div class="block-item rounded-lg border border-gray-200 bg-white p-4">
+                <div class="mb-3 flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-gray-800">
+                        ブロック {{ $index + 1 }}
+                    </h3>
+
+                    <button
+                        type="button"
+                        class="remove-block text-sm text-red-600 hover:text-red-800"
+                    >
+                        削除
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        サブタイトル
+                    </label>
+
+                    <input
+                        type="text"
+                        name="blocks[{{ $index }}][subtitle]"
+                        value="{{ $block['subtitle'] ?? '' }}"
+                        class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    >
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700">
+                        本文
+                    </label>
+
+                    <textarea
+                        name="blocks[{{ $index }}][body]"
+                        rows="8"
+                        class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    >{{ $block['body'] ?? '' }}</textarea>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
 
         <fieldset>
             <legend class="text-sm font-medium text-gray-700">
@@ -165,4 +228,71 @@
             </button>
         </div>
     </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const blocks = document.getElementById('blocks');
+        const addButton = document.getElementById('add-block');
+
+        addButton.addEventListener('click', () => {
+            const index = blocks.querySelectorAll('.block-item').length;
+
+            const html = `
+                <div class="block-item rounded-lg border border-gray-200 bg-white p-4">
+                    <div class="mb-3 flex items-center justify-between">
+                        <h3 class="text-sm font-semibold text-gray-800">
+                            ブロック ${index + 1}
+                        </h3>
+
+                        <button
+                            type="button"
+                            class="remove-block text-sm text-red-600 hover:text-red-800"
+                        >
+                            削除
+                        </button>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            サブタイトル
+                        </label>
+
+                        <input
+                            type="text"
+                            name="blocks[${index}][subtitle]"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        >
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700">
+                            本文
+                        </label>
+
+                        <textarea
+                            name="blocks[${index}][body]"
+                            rows="8"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        ></textarea>
+                    </div>
+                </div>
+            `;
+
+            blocks.insertAdjacentHTML('beforeend', html);
+        });
+
+        blocks.addEventListener('click', (event) => {
+            if (!event.target.classList.contains('remove-block')) {
+                return;
+            }
+
+            if (blocks.querySelectorAll('.block-item').length <= 1) {
+                alert('ブロックは最低1つ必要です。');
+                return;
+            }
+
+            event.target.closest('.block-item').remove();
+        });
+    });
+</script>
 @endsection
