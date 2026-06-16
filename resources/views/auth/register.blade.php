@@ -54,8 +54,43 @@
         <x-input-error :messages="$errors->get('birth_year')" class="mt-2" />
         <x-input-error :messages="$errors->get('birth_month')" class="mt-2" />
     </div>
+    <div>
+        <x-input-label value="あなたの立場（複数選択可）" />
 
-        <div>
+        @php
+            $selectedRoles = collect(old('roles', []));
+        @endphp
+
+        <div class="mt-2 space-y-2">
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="roles[]" id="role_patient" value="patient"
+                    @checked($selectedRoles->contains('patient'))>
+                <span>患者</span>
+            </label>
+
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="roles[]" value="family"
+                    @checked($selectedRoles->contains('family'))>
+                <span>家族</span>
+            </label>
+
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="roles[]" value="friend"
+                    @checked($selectedRoles->contains('friend'))>
+                <span>友人・職場</span>
+            </label>
+
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="roles[]" value="medical"
+                    @checked($selectedRoles->contains('medical'))>
+                <span>医療者</span>
+            </label>
+        </div>
+
+        <x-input-error :messages="$errors->get('roles')" class="mt-2" />
+    </div>
+    <div id="patient-fields" class="space-y-4">
+    <div>
     <x-input-label for="diagnosed_year" value="診断年月" />
 
     <div class="flex gap-2 mt-1">
@@ -88,6 +123,40 @@
 
         <x-input-error :messages="$errors->get('diagnosed_year')" class="mt-2" />
         <x-input-error :messages="$errors->get('diagnosed_month')" class="mt-2" />
+    </div>
+
+    <div>
+        <x-input-label for="treatment_status" value="現在の治療状況" />
+
+        <select
+            name="treatment_status"
+            id="treatment_status"
+            class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+        >
+            <option value="">選択してください</option>
+
+            <option value="under_treatment"
+                @selected(old('treatment_status') === 'under_treatment')>
+                治療中
+            </option>
+
+            <option value="completed"
+                @selected(old('treatment_status') === 'completed')>
+                治療終了
+            </option>
+
+            <option value="recurrence"
+                @selected(old('treatment_status') === 'recurrence')>
+                再発治療中
+            </option>
+
+            <option value="metastatic"
+                @selected(old('treatment_status') === 'metastatic')>
+                転移治療中
+            </option>
+        </select>
+
+        <x-input-error :messages="$errors->get('treatment_status')" class="mt-2" />
     </div>
 
         <fieldset class="space-y-4">
@@ -250,6 +319,7 @@
 
             <x-input-error :messages="$errors->get('treatment_types')" class="mt-2" />
         </fieldset>
+        </div>
 
         <label class="flex items-start gap-2 text-sm">
             <input type="checkbox" name="privacy" value="1" class="mt-1 rounded border-gray-300" @checked(old('privacy')) required />
@@ -266,5 +336,26 @@
             <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">ログインへ</a>
             <x-primary-button>登録する</x-primary-button>
         </div>
+    <script>
+        function togglePatientFields() {
+            const patientCheckbox = document.getElementById('role_patient');
+            const patientFields = document.getElementById('patient-fields');
+
+            const isPatient = patientCheckbox.checked;
+
+            patientFields.style.display = isPatient ? 'block' : 'none';
+
+            patientFields.querySelectorAll('select, input').forEach((field) => {
+                field.disabled = !isPatient;
+                field.required = isPatient && (
+                    field.name === 'diagnosed_year' ||
+                    field.name === 'diagnosed_month'
+                );
+            });
+        }
+
+        document.getElementById('role_patient').addEventListener('change', togglePatientFields);
+        document.addEventListener('DOMContentLoaded', togglePatientFields);
+    </script>
     </form>
 </x-guest-layout>
