@@ -47,7 +47,9 @@ class ProfileController extends Controller
             'email' => $data['email'],
             'birth_date' => $birthDate,
             'diagnosed_at' => $diagnosedAt,
-            'treatment_types' => array_values($data['treatment_types'] ?? $user->treatment_types ?? []),
+            'roles' => array_values($data['roles'] ?? []),
+            'treatment_status' => $data['treatment_status'] ?? null,
+            'treatment_types' => array_values($data['treatment_types'] ?? []),
         ]);
 
         if ($user->isDirty('email')) {

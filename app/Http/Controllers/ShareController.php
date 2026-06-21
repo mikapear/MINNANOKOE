@@ -56,8 +56,15 @@ class ShareController extends Controller
             ? PostStatus::Draft
             : PostStatus::Pending;
         
+        $user = $request->user();
+
         $post = Post::query()->create([
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
+            'author_roles' => $user->roles,
+            'author_treatment_status' => $user->treatment_status,
+            'author_treatment_types' => $user->treatment_types,
+            'author_birth_date' => $user->birth_date,
+            'author_diagnosed_at' => $user->diagnosed_at,
             'character_id' => $validated['character_id'] ?? null,
             'theme_id' => $validated['theme_id'] ?? null,
             'body_original' => $validated['body'],

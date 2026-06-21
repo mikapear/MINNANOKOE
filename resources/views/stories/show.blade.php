@@ -6,29 +6,76 @@
     <article class="prose prose-indigo max-w-none">
         <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-100">
 
-            @if($post->user)
+            @if($post->author_roles || $post->author_birth_date || $post->author_treatment_types)
                 @php
-                    $treatmentLabels = config('minnanokoe.treatment_types');
+                $roleLabels = [
+                    'patient' => '患者',
+                    'family' => '家族',
+                    'friend' => '友人・職場',
+                    'medical' => '医療者',
+                ];
 
-                    $treatments = collect((array) $post->user->treatment_types)
-                        ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
-                        ->implode('・');
-                @endphp
+                $statusLabels = [
+                    'under_treatment' => '治療中',
+                    'completed' => '治療終了',
+                    'recurrence' => '再発治療中',
+                    'metastatic' => '転移治療中',
+                ];
 
-                <div class="mb-4 border-b border-gray-100 pb-3 text-xs text-gray-500">
-                    @if($post->user->birth_date)
-                        現在{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->age / 10) * 10 }}代
-                    @endif
+                $ageLabel = function ($age) {
+                    if ($age < 30) return '20代';
+                    if ($age < 35) return '30代前半';
+                    if ($age < 40) return '30代後半';
+                    if ($age < 45) return '40代前半';
+                    if ($age < 50) return '40代後半';
+                    if ($age < 55) return '50代前半';
+                    if ($age < 60) return '50代後半';
+                    return '60代以上';
+                };
 
-                    @if($post->user->birth_date && $post->user->diagnosed_at)
-                        ｜診断時{{ floor(\Carbon\Carbon::parse($post->user->birth_date)->diffInYears(\Carbon\Carbon::parse($post->user->diagnosed_at)) / 10) * 10 }}代
-                    @endif
+                $roles = collect((array) $post->author_roles)
+                    ->map(fn ($r) => $roleLabels[$r] ?? $r)
+                    ->implode('・');
 
-                    @if($treatments)
-                        ｜{{ $treatments }}
-                    @endif
-                </div>
-            @endif
+                $status = $statusLabels[$post->author_treatment_status] ?? null;
+
+                $treatmentLabels = config('minnanokoe.treatment_types');
+
+                $treatments = collect((array) $post->author_treatment_types)
+                    ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
+                    ->implode('・');
+
+                $currentAge = $post->author_birth_date
+                    ? $ageLabel(\Carbon\Carbon::parse($post->author_birth_date)->age)
+                    : null;
+
+                $diagnosedAge = ($post->author_birth_date && $post->author_diagnosed_at)
+                    ? $ageLabel(\Carbon\Carbon::parse($post->author_birth_date)->diffInYears(\Carbon\Carbon::parse($post->author_diagnosed_at)))
+                    : null;
+            @endphp
+
+            <div class="mb-4 border-b border-gray-100 pb-3 text-xs text-gray-500">
+                @if($roles)
+                    {{ $roles }}
+                @endif
+
+                @if($currentAge)
+                    ｜現在{{ $currentAge }}
+                @endif
+
+                @if($diagnosedAge)
+                    ｜診断時{{ $diagnosedAge }}
+                @endif
+
+                @if($status)
+                    ｜{{ $status }}
+                @endif
+
+                @if($treatments)
+                    ｜{{ $treatments }}
+                @endif
+            </div>
+        @endif
 
             @if($post->theme)
                 <div class="mb-4">

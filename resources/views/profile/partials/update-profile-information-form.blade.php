@@ -4,6 +4,12 @@
             プロフィール情報
         </h2>
 
+        @if (session('status') === 'profile-updated')
+            <span class="text-sm font-medium text-green-600">
+                ✓ 保存しました
+            </span>
+        @endif
+
         <p class="mt-1 text-sm text-gray-600">
             ニックネーム・連絡先・プロフィール情報を更新できます。
         </p>
@@ -92,6 +98,49 @@
         </div>
 
         <div>
+            <x-input-label value="あなたの立場（複数選択可）" />
+
+            @php
+                $selectedRoles = collect(old('roles', $user->roles ?? []));
+            @endphp
+
+            <div class="mt-2 space-y-2">
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox"
+                        id="role_patient"
+                        name="roles[]"
+                        value="patient"
+                        @checked($selectedRoles->contains('patient'))>
+                    <span>患者</span>
+                </label>
+
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox"
+                        name="roles[]"
+                        value="family"
+                        @checked($selectedRoles->contains('family'))>
+                    <span>家族</span>
+                </label>
+
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox"
+                        name="roles[]"
+                        value="friend"
+                        @checked($selectedRoles->contains('friend'))>
+                    <span>友人・職場</span>
+                </label>
+
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox"
+                        name="roles[]"
+                        value="medical"
+                        @checked($selectedRoles->contains('medical'))>
+                    <span>医療者</span>
+                </label>
+            </div>
+        </div>
+    <div id="patient-fields" class="space-y-4">
+        <div>
             <x-input-label value="診断年月" />
 
             @php
@@ -133,6 +182,40 @@
 
             <x-input-error class="mt-2" :messages="$errors->get('diagnosed_year')" />
             <x-input-error class="mt-2" :messages="$errors->get('diagnosed_month')" />
+        </div>
+
+        <div>
+            <x-input-label for="treatment_status" value="現在の治療状況" />
+
+            <select
+                name="treatment_status"
+                id="treatment_status"
+                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+            >
+                <option value="">選択してください</option>
+
+                <option value="under_treatment"
+                    @selected(old('treatment_status', $user->treatment_status) === 'under_treatment')>
+                    治療中
+                </option>
+
+                <option value="completed"
+                    @selected(old('treatment_status', $user->treatment_status) === 'completed')>
+                    治療終了
+                </option>
+
+                <option value="recurrence"
+                    @selected(old('treatment_status', $user->treatment_status) === 'recurrence')>
+                    再発治療中
+                </option>
+
+                <option value="metastatic"
+                    @selected(old('treatment_status', $user->treatment_status) === 'metastatic')>
+                    転移治療中
+                </option>
+            </select>
+
+            <x-input-error class="mt-2" :messages="$errors->get('treatment_status')" />
         </div>
 
         <fieldset class="space-y-4">
@@ -294,18 +377,30 @@
                     <span>放射線治療</span>
                 </label>
             </div>
+        </fieldset>
+    </div>
         <div class="flex items-center gap-4">
-            <x-primary-button>保存する</x-primary-button>
+            <x-primary-button>保存</x-primary-button>
 
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >保存しました。</p>
-            @endif
         </div>
+    <script>
+    function togglePatientFields() {
+        const patientCheckbox = document.getElementById('role_patient');
+        const patientFields = document.getElementById('patient-fields');
+
+        if (!patientCheckbox || !patientFields) return;
+
+        patientFields.style.display = patientCheckbox.checked ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const patientCheckbox = document.getElementById('role_patient');
+
+        if (patientCheckbox) {
+            patientCheckbox.addEventListener('change', togglePatientFields);
+            togglePatientFields();
+        }
+    });
+    </script>
     </form>
 </section>

@@ -7,16 +7,16 @@
         <div class="flex justify-center">
             <img src="{{ asset('logo.png') }}" alt="ロゴ" class="h-40 w-auto object-contain sm:h-64"/>
         </div>
-        <p class="text-lg text-indigo-900 font-medium">あなたの日常、あなたの声</p>
+        <p class="text-base text-indigo-900 font-medium sm:text-2xl">あなたの日常、あなたの声</p>
         <div class="mx-auto max-w-2xl space-y-3 text-center">
-            <p class="text-lg font-medium leading-relaxed text-indigo-900 sm:text-lg">
+            <p class="hidden sm:block text-lg font-medium leading-relaxed text-indigo-900">
                 不安だったこと、
                 頑張ったこと、
                 助けられた言葉や日々の工夫。
             </p>
 
-            <p class="text-lg font-medium leading-relaxed text-indigo-900 sm:text-lg">
-                「みんなの声辞典」は、
+            <p class="text-sm font-medium leading-relaxed text-indigo-900 sm:text-lg">
+                「みんなの声辞典」は
                 乳がん経験者の声と記憶を残し、
                 次の誰かを支えるための場所です。
             </p>
@@ -41,7 +41,7 @@
     @endif
 
     <div class="mt-12 grid gap-4 sm:grid-cols-3">
-        <a href="{{ route('share.create') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
+        <a href="{{ route('share.create') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-4 sm:p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
             <div class="space-y-4">
                 <div class="text-lg font-semibold">
                     声を投稿する
@@ -59,7 +59,7 @@
                 </p>
             </div>
         </a>
-        <a href="{{ route('stories.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
+        <a href="{{ route('stories.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-4 sm:p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
             <div class="space-y-4">
                 <div class="text-lg font-semibold">
                     みんなの声を読む
@@ -78,7 +78,7 @@
 
             </div>
         </a>
-        <a href="{{ route('learn.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
+        <a href="{{ route('learn.index') }}" class="block rounded-xl border-2 border-indigo-200 bg-white p-4 sm:p-6 text-center font-medium text-indigo-800 shadow-sm transition hover:border-indigo-400">
             <div class="space-y-4">
                 <div class="text-lg font-semibold">
                     学んで安心

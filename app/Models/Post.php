@@ -29,6 +29,11 @@ class Post extends Model
         'reviewed_by',
         'reviewed_at',
         'published_at',
+        'author_roles',
+        'author_treatment_status',
+        'author_treatment_types',
+        'author_birth_date',
+        'author_diagnosed_at',
     ];
 
     protected function casts(): array
@@ -37,6 +42,10 @@ class Post extends Model
             'status' => PostStatus::class,
             'reviewed_at' => 'datetime',
             'published_at' => 'datetime',
+            'author_roles' => 'array',
+            'author_treatment_types' => 'array',
+            'author_birth_date' => 'date',
+            'author_diagnosed_at' => 'date',
         ];
     }
 

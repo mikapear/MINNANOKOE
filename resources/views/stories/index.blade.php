@@ -113,48 +113,83 @@
     <ul class="mt-8 space-y-4">
         @forelse($posts as $post)
             <li class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                @if($post->user)
+                @if($post->author_roles || $post->author_birth_date || $post->author_treatment_types)
                     @php
-                        $birthDate = $post->user->birth_date
-                            ? \Carbon\Carbon::parse($post->user->birth_date)
-                            : null;
+                        $roleLabels = [
+                        'patient' => '患者',
+                        'family' => '家族',
+                        'friend' => '友人・職場',
+                        'medical' => '医療者',
+                    ];
 
-                        $diagnosedAt = $post->user->diagnosed_at
-                            ? \Carbon\Carbon::parse($post->user->diagnosed_at)
-                            : null;
+                    $statusLabels = [
+                        'under_treatment' => '治療中',
+                        'completed' => '治療終了',
+                        'recurrence' => '再発治療中',
+                        'metastatic' => '転移治療中',
+                    ];
 
-                        $currentAge = $birthDate ? $birthDate->age : null;
+                    $ageLabel = function ($age) {
+                        if ($age < 30) return '20代';
+                        if ($age < 35) return '30代前半';
+                        if ($age < 40) return '30代後半';
+                        if ($age < 45) return '40代前半';
+                        if ($age < 50) return '40代後半';
+                        if ($age < 55) return '50代前半';
+                        if ($age < 60) return '50代後半';
+                        return '60代以上';
+                    };
 
-                        $diagnosedAge = ($birthDate && $diagnosedAt)
-                            ? $birthDate->diffInYears($diagnosedAt)
-                            : null;
+                    $roles = collect((array) $post->author_roles)
+                        ->map(fn ($r) => $roleLabels[$r] ?? $r)
+                        ->implode('・');
 
-                        $treatmentLabels = config('minnanokoe.treatment_types');
+                    $status = $statusLabels[$post->author_treatment_status] ?? null;
 
-                        $treatments = collect((array) $post->user->treatment_types)
-                            ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
-                            ->implode('・');
-                    @endphp
+                    $birthDate = $post->author_birth_date
+                        ? \Carbon\Carbon::parse($post->author_birth_date)
+                        : null;
 
-                    <div class="mb-3 text-xs text-gray-500">
-                        {{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}
+                    $diagnosedAt = $post->author_diagnosed_at
+                        ? \Carbon\Carbon::parse($post->author_diagnosed_at)
+                        :null;
 
-                        @if($currentAge)
-                            ｜現在{{ floor($currentAge / 10) * 10 }}代
-                        @endif
+                    $currentAge = $birthDate ? $ageLabel($birthDate->age) : null;
 
-                        @if($diagnosedAge)
-                            ｜診断時{{ floor($diagnosedAge / 10) * 10 }}代
-                        @endif
+                    $diagnosedAge = ($birthDate && $diagnosedAt)
+                        ? $ageLabel($birthDate->diffInYears($diagnosedAt))
+                        : null;
 
-                        @if($treatments)
-                            ｜{{ $treatments }}
-                        @endif
-                    </div>
-                @else
-                    <p class="mb-4 text-xs text-gray-500">
-                        {{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}
-                    </p>
+                    $treatmentLabels = config('minnanokoe.treatment_types');
+
+                    $treatments = collect((array) $post->author_treatment_types)
+                        ->map(fn ($t) => $treatmentLabels[$t] ?? $t)
+                        ->implode('・');
+                @endphp
+
+                <div class="mb-3 text-xs text-gray-500">
+                    {{ optional($post->published_at)->timezone(config('app.timezone'))->format('Y/m/d') }}
+
+                    @if($roles)
+                        ｜{{ $roles }}
+                    @endif
+
+                    @if($currentAge)
+                        ｜現在{{ $currentAge }}
+                    @endif
+
+                    @if($diagnosedAge)
+                        ｜診断時{{ $diagnosedAge }}
+                    @endif
+
+                    @if($status)
+                        ｜{{ $status }}
+                    @endif
+
+                    @if($treatments)
+                        ｜{{ $treatments }}
+                    @endif
+                </div>
                 @endif
 
                 @if($post->theme)
@@ -181,6 +216,7 @@
                         </a>
                     </div>
                 </div>
+                
 
                 @if($post->tags->isNotEmpty())
                     <div class="mt-3 flex flex-wrap gap-1">

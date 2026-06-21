@@ -7,16 +7,20 @@
     
     <div class="mt-5 rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4 text-indigo-900">
         <p class="text-sm font-semibold">
-            何を書いてもいいです。たとえば、
+            何を書いても大丈夫です。たとえば、
             <span class="text-sm font-semibold">
                 治療中の気持ち、不安、助けられた言葉、日々の工夫、今だから思うこと。
             </span>
         </p>
 
-        <p class="mt-2 text-xs leading-relaxed text-indigo-800">
+        <p class="font-semibold mt-2 text-sm leading-relaxed text-indigo-800">
             きれいにまとめなくても大丈夫です。あなたの言葉が、次の誰かの支えになるかもしれません。
         </p>
     </div>
+
+    <p class="mt-2 text-sm text-gray-500">
+        ※この投稿には、投稿時点のプロフィール情報が記録されます。あとからプロフィールを変更しても、この投稿に表示される情報は変わりません。
+    </p>
     <form method="post" action="{{ route('share.store') }}" class="mt-8 space-y-6">
         @csrf
 

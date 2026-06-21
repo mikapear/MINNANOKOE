@@ -6,6 +6,24 @@
     display: none !important;
 }
 
+/* site-nav: Tailwind md: が未ビルドでも 768px で切り替わるフォールバック */
+@media (min-width: 768px) {
+    .site-nav-desktop {
+        display: flex !important;
+    }
+
+    .site-nav-mobile-trigger,
+    .site-nav-mobile-panel {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .site-nav-desktop {
+        display: none !important;
+    }
+}
+
 
 /* ===== みんなの声辞典 投稿欄エフェクト ===== */
 

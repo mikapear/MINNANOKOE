@@ -28,6 +28,9 @@ class ProfileUpdateRequest extends FormRequest
             'birth_month' => ['nullable', 'integer', 'min:1', 'max:12'],
             'diagnosed_year' => ['nullable', 'integer', 'min:1980', 'max:'.date('Y')],
             'diagnosed_month' => ['nullable', 'integer', 'min:1', 'max:12'],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['string', 'in:patient,family,friend,medical'],
+            'treatment_status' => ['nullable', 'string', 'in:under_treatment,completed,recurrence,metastatic'],
             'treatment_types' => ['nullable', 'array'],
             'treatment_types.*' => ['string'],
         ];
