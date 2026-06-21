@@ -65,25 +65,25 @@
             <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="roles[]" id="role_patient" value="patient"
                     @checked($selectedRoles->contains('patient'))>
-                <span>患者</span>
+                <span>ご本人</span>
             </label>
 
             <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="roles[]" value="family"
                     @checked($selectedRoles->contains('family'))>
-                <span>家族</span>
+                <span>ご家族</span>
             </label>
 
             <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="roles[]" value="friend"
                     @checked($selectedRoles->contains('friend'))>
-                <span>友人・職場</span>
+                <span>ご友人・職場の方</span>
             </label>
 
             <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="roles[]" value="medical"
                     @checked($selectedRoles->contains('medical'))>
-                <span>医療者</span>
+                <span>医療関係者</span>
             </label>
         </div>
 
