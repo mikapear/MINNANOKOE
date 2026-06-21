@@ -22,6 +22,18 @@
             </p>
         </div>
     </div>
+    <div class="mx-auto mt-8 max-w-3xl rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+    <p class="font-semibold">
+        🚧 現在試験運用中です
+    </p>
+
+    <p class="mt-2 leading-relaxed">
+        みんなの声辞典は、乳がん経験者の声を安心して共有できる場を目指し、試験運用を行っています。
+        機能や運営体制は今後改善される場合があります。
+        お気づきの点やご意見がありましたら、お問い合わせよりお知らせください。
+    </p>
+
+</div>
 
     @if($themes->isNotEmpty())
         <div class="mt-10 rounded-2xl text-center">

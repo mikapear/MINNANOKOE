@@ -40,6 +40,7 @@ Route::get('/stories/{slug}', [StoryController::class, 'show'])->name('stories.s
 Route::get('/learn', [LearnController::class, 'index'])->name('learn.index');
 Route::get('/learn/{sectionSlug}', [LearnController::class, 'section'])->name('learn.section');
 Route::get('/learn/{sectionSlug}/{columnSlug}', [LearnController::class, 'show'])->name('learn.show');
+Route::view('/contact', 'contact')->name('contact');
 
 Route::view('/terms', 'legal.terms')->name('terms');
 Route::view('/privacy', 'legal.privacy')->name('privacy');
@@ -96,6 +97,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->name('users.activate');
     Route::resource('themes', ThemeController::class)
     ->except(['show']);
+    
     
 });
 

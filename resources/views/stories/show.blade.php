@@ -100,7 +100,7 @@
 
             @if($post->medical_disclaimer)
                 <div class="mt-4 rounded-lg bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">
-                    ※この内容は投稿者個人の体験や意見であり、医療上の助言ではありません。
+                    ※この内容は投稿者個人の体験や意見であり、医療上の助言ではありません。治療や健康に関する判断は、主治医等の医療専門職にご相談ください。
                 </div>
             @endif
 

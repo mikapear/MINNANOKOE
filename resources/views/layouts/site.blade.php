@@ -29,6 +29,11 @@
                     <a href="{{ route('privacy') }}" class="hover:text-indigo-600 hover:underline">
                         プライバシーポリシー
                     </a>
+                    
+                    <span class="mx-2">|</span>
+                    <a href="{{ route('contact') }}" class="hover:text-indigo-600 hover:underline">
+                        お問い合わせ
+                    </a>
                 </div>
             </footer>
 
