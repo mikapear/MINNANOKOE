@@ -12,7 +12,7 @@
     }">
     <div class="max-w-4xl mx-auto px-4 py-3">
         <div class="flex items-center justify-between gap-3">
-            <a href="{{ route('home') }}" class="text-lg font-semibold text-indigo-700">みんなの声辞典</a>
+            <a href="{{ route('home') }}" class="text-lg font-semibold text-indigo-700">MINNANOKOE</a>
 
             <button type="button" x-cloak x-show="!isDesktop"
                 class="site-nav-mobile-trigger inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"

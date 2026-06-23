@@ -1,1 +1,1 @@
-<img src="{{ asset('logo.png') }}" alt="みんなの声辞典" {{ $attributes->merge(['class' => 'h-48 w-auto object-contain']) }}>
+<img src="{{ asset('logo.png') }}" alt="MINNANOKOE" {{ $attributes->merge(['class' => 'h-48 w-auto object-contain']) }}>

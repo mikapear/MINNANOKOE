@@ -1,4 +1,4 @@
-# みんなの声辞典（Survivor+）
+# MINNANOKOE（Survivor+）
 
 がん経験者の声をタグ付きで共有・検索する Laravel + MySQL の Web アプリです。要件は [document.md](document.md)、DB/URL 設計は [docs/er-and-routes.md](docs/er-and-routes.md) を参照してください。
 

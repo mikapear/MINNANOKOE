@@ -11,7 +11,7 @@
         </h1>
 
         <p class="mt-3 text-sm text-gray-500">
-            みんなの声辞典における個人情報の取り扱いについてご確認ください。
+            MINNANOKOEにおける個人情報の取り扱いについてご確認ください。
         </p>
 
         <p class="mt-2 text-xs text-gray-400">
@@ -24,7 +24,7 @@
         <section class="rounded-xl border border-indigo-100 bg-white p-6 shadow-sm">
             <div class="space-y-3 leading-7 text-gray-700">
                 <p>
-                    みんなの声辞典（以下「本サービス」といいます。）は、利用者の個人情報の重要性を認識し、個人情報保護に関する法令を遵守するとともに、適切な取得、利用および管理に努めます。
+                    MINNANOKOE（以下「本サービス」といいます。）は、利用者の個人情報の重要性を認識し、個人情報保護に関する法令を遵守するとともに、適切な取得、利用および管理に努めます。
                 </p>
             </div>
         </section>
