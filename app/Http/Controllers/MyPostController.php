@@ -19,6 +19,9 @@ class MyPostController extends Controller
         $status = $request->query('status');
         $posts = Post::query()
             ->where('user_id', $request->user()->id)
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->with(['tags', 'user', 'likes', 'character', 'theme'])
             
             ->latest()
