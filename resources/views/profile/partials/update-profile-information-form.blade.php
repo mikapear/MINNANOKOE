@@ -291,8 +291,15 @@
 
                     <label class="flex items-center gap-2 text-sm">
                         <input type="checkbox" name="treatment_types[]" value="chemo_ac/ec"
-                            @checked($selectedTreatments->contains('chemo_ac/ec'))>
+                            @checked($selectedTreatments->contains('chemo_ac_ec'))>
                         <span>AC/EC療法</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox"
+                            name="treatment_types[]"
+                            value="chemo_carboplatin"
+                            @checked($selectedTreatments->contains('chemo_carboplatin'))>
+                        <span>カルボプラチン</span>
                     </label>
 
                     <label class="flex items-center gap-2 text-sm">
@@ -320,13 +327,13 @@
             <div class="mt-2 ml-6 space-y-1">
 
                 <label class="flex items-center gap-2 text-sm">
-                    <input type="checkbox" name="treatment_types[]" value="trastuzumab/pertuzumab"
+                    <input type="checkbox" name="treatment_types[]" value="trastuzumab_pertuzumab"
                         @checked($selectedTreatments->contains('trastuzumab/pertuzumab'))>
                     <span>トラスツズマブ/ペルスツマブ</span>
                 </label>
 
                 <label class="flex items-center gap-2 text-sm">
-                    <input type="checkbox" name="treatment_types[]" value="CDK4/6"
+                    <input type="checkbox" name="treatment_types[]" value="CDK4_6"
                         @checked($selectedTreatments->contains('CDK4/6'))>
                     <span>CDK4/6阻害薬</span>
                 </label>
