@@ -239,6 +239,7 @@ class DatabaseSeeder extends Seeder
                     'tag_kind' => 'emotion',
                     'tag_group_id' => $emotion->id,
                     'sort_order' => $t['sort_order'],
+                    'is_admin_only' => true, 
                 ],
             );
         }
