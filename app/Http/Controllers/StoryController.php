@@ -78,21 +78,6 @@ class StoryController extends Controller
         return redirect()->route('stories.index', ['q' => $request->query('q')]);
     }
 
-    public function byWorryIndex(): View
-    {
-        $group = TagGroup::query()->where('slug', 'worry')->firstOrFail();
-
-        return view('stories.by-group-index', [
-            'pageTitle' => '悩みで選ぶ',
-            'tags' => $group->tags,
-            'groupSlug' => 'worry',
-        ]);
-    }
-
-    public function byWorry(string $slug): View
-    {
-        return $this->postsForGroupSlug('worry', $slug, '悩みで選ぶ');
-    }
 
     public function byAgeIndex(): View
     {
