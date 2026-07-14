@@ -9,7 +9,8 @@
     
     <div class="mt-4 space-y-5">
         @foreach($tagGroups as $group)
-            <details open class="rounded-lg border border-gray-200 bg-white p-4">
+            <details @if(collect($tagIds ?? [])->isNotEmpty()) open @endif
+                class="rounded-lg border border-gray-200 bg-white p-4">
                 <summary class="cursor-pointer text-sm font-semibold text-gray-800">
                     {{ $group->name }}
                 </summary>

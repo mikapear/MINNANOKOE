@@ -5,31 +5,26 @@
 @section('content')
     <h1 class="text-2xl font-bold text-gray-900">声を投稿する</h1>
     
-        <div class="mt-5 flex items-end gap-3 sm:gap-5">
-            <img
+    <div class="mt-5 flex items-end gap-3">
+        <img
             src="{{ asset('images/characters/bird-guide.png') }}"
             alt="MINNANOKOEの案内役"
-            class="h-28 w-24 shrink-0 object-contain sm:h-40 sm:w-32"
+            class="h-20 w-16 shrink-0 object-contain sm:h-24 sm:w-20"
         >
 
-            <div class="relative mb-3 flex-1 rounded-3xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-indigo-900 shadow-sm">
-                <span
-                    class="absolute -left-2 bottom-7 h-4 w-4 rotate-45 border-b border-l border-indigo-100 bg-indigo-50"
-                    aria-hidden="true"
-                ></span>
+        <div class="relative mb-2 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
+            <span
+                class="absolute -left-2 bottom-5 h-4 w-4 rotate-45 border-b border-l border-indigo-100 bg-indigo-50"
+                aria-hidden="true"
+            ></span>
 
-                <p class="text-sm font-semibold leading-relaxed sm:text-base">
-                    何を書いても大丈夫。
-                </p>
+            <p class="text-sm font-semibold leading-relaxed">
+                何を書いても大丈夫。
+                <br>治療中の気持ちや不安、助けられた言葉、日々の工夫、今だから思うことを、あなたの言葉で聞かせてください。
+            </p>
 
-                <p class="mt-2 text-sm leading-relaxed text-indigo-800">
-                    治療中の気持ち、不安、助けられた言葉、日々の工夫、
-                    今だから思うことを、あなたの言葉で聞かせてください。
-                </p>
-
-
-            </div>
-        </div>  
+        </div>
+    </div>
     <p class="mt-2 text-sm text-gray-500">
         ※この投稿には、投稿時点のプロフィール情報が記録されます。あとからプロフィールを変更しても、この投稿に表示される情報は変わりません。
     </p>
@@ -237,30 +232,25 @@
         </fieldset>
 
 
-        <div class="mt-10 rounded-3xl bg-violet-50 p-6">
+    <div class="mt-10 flex items-end gap-3">
+        <img
+            src="{{ asset('images/characters/bird-guide.png') }}"
+            alt="MINNANOKOEの案内役"
+            class="h-20 w-16 shrink-0 object-contain sm:h-24 sm:w-20"
+        >
 
-            <div class="flex items-end gap-3">
-                <img
-                    src="{{ asset('images/characters/bird-guide.png') }}"
-                    alt="MINNANOKOEの案内役"
-                    class="h-20 w-16 shrink-0 object-contain sm:h-24 sm:w-20"
-            >
+        <div class="relative mb-2 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
+            <span
+                class="absolute -left-2 bottom-5 h-4 w-4 rotate-45 border-b border-l border-indigo-100 bg-indigo-50"
+                aria-hidden="true"
+            ></span>
 
-                <div class="relative flex-1 rounded-2xl border border-violet-100 bg-white px-5 py-4 shadow-sm">
-
-                    <span
-                        class="absolute -left-2 bottom-5 h-4 w-4 rotate-45 border-b border-l border-violet-100 bg-white"
-                    ></span>
-
-                    <p class="font-semibold text-gray-800">
-                        ここまで書いてくれてありがとう。
-                    </p>
-
-                    <p class="mt-2 text-sm leading-relaxed text-gray-600">
-                        あとは私たちが受け取るね。
-                    </p>
-                </div>
-            </div>
+            <p class="text-sm font-medium leading-relaxed">
+                ここまで書いてくれてありがとう。<br>
+                あなたの声、大切に預かるね。
+            </p>
+        </div>
+    </div>
 
     <p class="mt-5 text-center text-xs text-gray-500">
         投稿は管理者が確認してから公開されます。

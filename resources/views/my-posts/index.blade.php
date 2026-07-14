@@ -10,19 +10,54 @@
         </p>
     @endif
     
-    @if(session('status') === 'posted')
-        <p class="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-800">投稿を受け付けました。公開までお待ちください。</p>
-    @endif
-    @if(session('status') === 'updated')
-        <p class="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-800">更新しました。</p>
-    @endif
+    @if(in_array(session('status'), ['posted', 'updated'], true))
+        <div class="mt-4 flex items-end gap-3">
+            <img
+                src="{{ asset('images/characters/bird-guide.png') }}"
+                alt="MINNANOKOEの案内役"
+                class="h-20 w-16 shrink-0 object-contain sm:h-24 sm:w-20"
+            >
 
+            <div class="relative mb-2 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
+                <span
+                    class="absolute -left-2 bottom-5 h-4 w-4 rotate-45 border-b border-l border-indigo-100 bg-indigo-50"
+                    aria-hidden="true"
+                ></span>
+
+                <p class="text-sm font-medium leading-relaxed">
+                    @if(session('status') === 'posted')
+                        投稿を受け付けたよ。公開まで少し待っていてね。
+                    @elseif(session('status') === 'updated')
+                        更新したよ。ありがとう。
+                    @endif
+                </p>
+            </div>
+        </div>
+    @else
+        <div class="mt-4 flex items-end gap-3">
+            <img
+                src="{{ asset('images/characters/bird-guide.png') }}"
+                alt="MINNANOKOEの案内役"
+                class="h-20 w-16 shrink-0 object-contain sm:h-24 sm:w-20"
+            >
+
+            <div class="relative mb-2 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
+                <span
+                    class="absolute -left-2 bottom-5 h-4 w-4 rotate-45 border-b border-l border-indigo-100 bg-indigo-50"
+                    aria-hidden="true"
+                ></span>
+
+                <p class="text-sm font-medium leading-relaxed">
+                    投稿した声の確認や編集ができるよ。
+                </p>
+            </div>
+        </div>
+    @endif
     @if(session('status') === 'deleted')
-    <p class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
-        投稿を削除しました。
-    </p>
+        <p class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+            投稿を削除しました。
+        </p>
     @endif
-
 <form method="get" class="mt-4 flex flex-wrap gap-2 text-sm">
     <label>
         ステータス

@@ -4,12 +4,6 @@
             プロフィール情報
         </h2>
 
-        @if (session('status') === 'profile-updated')
-            <span class="text-sm font-medium text-green-600">
-                ✓ 保存しました
-            </span>
-        @endif
-
         <p class="mt-1 text-sm text-gray-600">
             ニックネーム・連絡先・プロフィール情報を更新できます。
         </p>
